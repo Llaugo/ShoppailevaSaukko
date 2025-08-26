@@ -1,0 +1,25 @@
+#:kivy 2.0.0
+
+<MenuScreen>:
+    BoxLayout:
+        Button:
+            text: 'Goto settings'
+            on_release: root.manager.current = 'settings'
+        Label:
+            text: 'Menu'
+
+<SettingsScreen>:
+    BoxLayout:
+        Label:
+            text: 'Settings'
+        Button:
+            text: 'Back to menu'
+            on_release: root.manager.current = 'menu'
+
+<Player>:
+    size: 36, 41
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            texture: root.texture
