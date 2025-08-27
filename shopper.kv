@@ -1,20 +1,152 @@
 #:kivy 2.0.0
+#:import Window kivy.core.window.Window
 
 <MenuScreen>:
+    canvas:
+        Color:
+            rgba: 0.71, 0.78, 0.84, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Image:
+        id: bg
+        source: "images/menu_screen.png"
+        pos: 0, 0
+        size: Window.size
+        center: Window.center
+
     BoxLayout:
+        orientation: "vertical"
+        size_hint: 100/4000., 100/2000.
+        spacing: bg.norm_image_size[1]*0.035
+        pos: 
+            (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1160/4000.), \
+            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(330/2000.)
         Button:
-            text: 'Goto settings'
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(100/4000.)*2), (bg.norm_image_size[1]*(100/2000.)*2)
+            background_normal: "images/buttons/liftbutton0.png"
+            background_down:  "images/buttons/liftbutton1.png"
+            on_release: root.manager.current = 'strengths'
+        Button:
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(100/4000.)*2), (bg.norm_image_size[1]*(100/2000.)*2)
+            background_normal: "images/buttons/liftbutton0.png"
+            background_down:  "images/buttons/liftbutton1.png"
+            on_release: root.manager.current = 'continue'
+        Button:
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(100/4000.)*2), (bg.norm_image_size[1]*(100/2000.)*2)
+            background_normal: "images/buttons/liftbutton0.png"
+            background_down:  "images/buttons/liftbutton1.png"
             on_release: root.manager.current = 'settings'
-        Label:
-            text: 'Menu'
+        Button:
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(100/4000.)*2), (bg.norm_image_size[1]*(100/2000.)*2)
+            background_normal: "images/buttons/liftbutton0.png"
+            background_down:  "images/buttons/liftbutton1.png"
+            on_release: root.manager.current = '?'
+    Button:
+        color: (0,0,0,1)
+        font_size: bg.norm_image_size[1]*0.035
+        text: "Quit"
+        border: 0,0,0,0
+        size_hint: None, None
+        size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
+        pos_hint: {"left": 0.01, "top": 0.99}
+        background_normal: "images/buttons/longbutton0.png"
+        background_down:  "images/buttons/longbutton1.png"
+        on_release: app.stop()
+
+<StrengthScreen>:
+    canvas:
+        Color:
+            rgba: 0.71, 0.78, 0.84, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Image:
+        id: bg
+        source: "images/strength_on_menu.png"
+        pos: 0, 0
+        size: Window.size
+        center: Window.center
+        
+    BoxLayout:
+        size_hint: 400/4000., 100/2000.
+        spacing: bg.norm_image_size[0]*0.15
+        pos: 
+            (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(800/4000.), \
+            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(290/2000.)
+        Button:
+            color: (0,0,0,1)
+            font_size: bg.norm_image_size[1]*0.020
+            text: "Back to main menu"
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
+            background_normal: "images/buttons/longbutton0.png"
+            background_down:  "images/buttons/longbutton1.png"
+            on_release: root.manager.current = 'menu'
+        Button:
+            color: (0,0,0,1)
+            font_size: bg.norm_image_size[1]*0.020
+            text: "Randomize"
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
+            background_normal: "images/buttons/longbutton0.png"
+            background_down:  "images/buttons/longbutton1.png"
+        Button:
+            color: (0,0,0,1)
+            font_size: bg.norm_image_size[1]*0.020
+            text: "Start the adventure!"
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
+            background_normal: "images/buttons/longbutton0.png"
+            background_down:  "images/buttons/longbutton1.png"
+
+    Button:
+        color: (0,0,0,1)
+        font_size: bg.norm_image_size[1]*0.020
+        text: "Back to main menu"
+        border: 0,0,0,0
+        size_hint: None, None
+        size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
+        pos_hint: {"left": 0.01, "top": 0.99}
+        background_normal: "images/buttons/longbutton0.png"
+        background_down:  "images/buttons/longbutton1.png"
+        on_release: root.manager.current = 'menu'
+        
 
 <SettingsScreen>:
+    canvas:
+        Color:
+            rgba: 0.71, 0.78, 0.84, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
     BoxLayout:
         Label:
             text: 'Settings'
         Button:
             text: 'Back to menu'
             on_release: root.manager.current = 'menu'
+
+<QuestionScreen>:
+    canvas:
+        Color:
+            rgba: 0.71, 0.78, 0.84, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
 <Player>:
     size: 36, 41
