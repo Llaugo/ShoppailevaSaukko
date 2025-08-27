@@ -5,8 +5,19 @@ from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.properties import ObjectProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
+from kivy.core.text import LabelBase
 from playerClass import Player
+import strengthMenu
 import const
+
+
+LabelBase.register(
+    name="Roboto",  # override Kivy's default family
+    fn_regular="fonts/Courier_Prime/CourierPrime-Regular.ttf",
+    fn_bold="fonts/Courier_Prime/CourierPrime-Bold.ttf",
+    fn_italic="fonts/Courier_Prime/CourierPrime-Italic.ttf",
+    fn_bolditalic="fonts/Courier_Prime/CourierPrime-Bolditalic.ttf",
+)
 
 class ShopperGame(Widget):
     player = ObjectProperty(None)
@@ -14,9 +25,6 @@ class ShopperGame(Widget):
         pass
 
 class MenuScreen(Screen):
-    pass
-
-class StrengthScreen(Screen):
     pass
 
 class SettingsScreen(Screen):
@@ -30,7 +38,7 @@ class ShopperApp(App):
     def build(self):
         sm = ScreenManager(transition=NoTransition())
         sm.add_widget(MenuScreen(name='menu'))
-        sm.add_widget(StrengthScreen(name='strengths'))
+        sm.add_widget(strengthMenu.StrengthMenu(name='strengths'))
         sm.add_widget(SettingsScreen(name='settings'))
         sm.add_widget(QuestionScreen(name='?'))
 
