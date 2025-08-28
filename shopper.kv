@@ -63,6 +63,13 @@
         background_down:  "images/buttons/longbutton1.png"
         on_release: app.stop()
 
+
+<DeckButton>:
+    source: "images/card_pile.png"
+    background_normal: "images/card_pile.png"
+    border: 0,0,0,0
+    size_hint: None, None
+
 <StrengthMenu>:
     canvas:
         Color:
@@ -78,60 +85,65 @@
         size: Window.size
         center: Window.center
     # Odd cardpiles
-    BoxLayout:
-        size_hint: (0.1, 1)
+    GridLayout:
+        cols: 3
+        size_hint: None, None
+        row_default_height: bg.norm_image_size[1]*0.055
+        row_force_default: True
+        id: row1
         spacing: bg.norm_image_size[0]*0.0635
         pos: 
             (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1653/4000.), \
             (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(1222/2000.)
+        Label:
+            text: "0"
+        Label:
+            text: "2"
+        Label:
+            text: "4"
         DeckButton:
             id: deck0
-            border: 0,0,0,0
-            size_hint: None, None
+            index: 0
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
-            background_normal: "images/card_pile.png"
             on_release: root.selectDeck(self.index)
         DeckButton:
             id: deck2
-            border: 0,0,0,0
-            size_hint: None, None
+            index: 2
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
-            background_normal: "images/card_pile.png"
             on_release: root.selectDeck(self.index)
         DeckButton:
             id: deck4
-            border: 0,0,0,0
-            size_hint: None, None
+            index: 4
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
-            background_normal: "images/card_pile.png"
             on_release: root.selectDeck(self.index)
     # Even cardpiles
-    BoxLayout:
-        size_hint: (0.1, 1)
+    GridLayout:
+        cols: 3
+        id: row2
         spacing: bg.norm_image_size[0]*0.0635
         pos: 
             (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1905/4000.), \
             (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(1190/2000.)
+        Label:
+            text: "1"
+        Label:
+            text: "1"
+        Label:
+            text: "1"
         DeckButton:
             id: deck1
-            border: 0,0,0,0
-            size_hint: None, None
+            index: 1
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
-            background_normal: "images/card_pile.png"
             on_release: root.selectDeck(self.index)
         DeckButton:
             id: deck3
-            border: 0,0,0,0
-            size_hint: None, None
+            index: 3
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
-            background_normal: "images/card_pile.png"
             on_release: root.selectDeck(self.index)
         DeckButton:
             id: deck5
-            border: 0,0,0,0
-            size_hint: None, None
+            index: 5
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
-            background_normal: "images/card_pile.png"
             on_release: root.selectDeck(self.index)
     # Chosen cards
     RecycleView:
@@ -141,15 +153,16 @@
         do_scroll_y: False
         pos: 
             (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1610/4000.), \
-            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(740/2000.)
-        width:  (bg.norm_image_size[0]*(250/4000.)*5) + (bg.norm_image_size[0]*0.019*4)  # 5 cards + 4 gaps
-        height: bg.norm_image_size[1]*(350/2000.)                                       # card_h
+            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(620/2000.)
+        width:  (bg.norm_image_size[0]*(250/4000.)*5) * 1.1 + (bg.norm_image_size[0]*0.019*4) * 1.1  # 5 cards + 4 gaps
+        height: bg.norm_image_size[1]*(350/2000.) * 1.1                                       # card_h
         RecycleBoxLayout:
-            default_size: (bg.norm_image_size[0]*(250/4000.)), (bg.norm_image_size[1]*(350/2000.))
+            id: cards_rv_layout
+            default_size: (bg.norm_image_size[0]*(250/4000.)) * 1.1, (bg.norm_image_size[1]*(350/2000.)) * 1.1
             default_size_hint: None, None
-            height: bg.norm_image_size[1] * (350/2000.)
+            height: bg.norm_image_size[1] * (350/2000.) * 1.1
             size_hint_y: None
-            spacing: bg.norm_image_size[0]*0.019
+            spacing: bg.norm_image_size[0]*0.0115
         
     # Buttons
     BoxLayout:

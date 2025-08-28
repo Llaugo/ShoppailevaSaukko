@@ -1,6 +1,7 @@
 from kivy.uix.widget import Widget
+from kivy.core.image import Image
 import const
-import spriteSheet
+from spriteSheet import SpriteSheet
 import playerClass
 import math
 
@@ -17,10 +18,9 @@ class StrengthCard(Widget):
         self.timerMax = 8*60     # timer duration
         self.cooldownMax = 30*60  # cooldown duration
         self.level = 1          # Level of the card
-        self.cardSprite = spriteSheet.SpriteSheet('images/strength_sheet.png')
-        self.image = self.cardSprite.getImage(self.imageNum,250,350,const.scale/2).copy()
-        self.xpSprite = spriteSheet.SpriteSheet('images/xp_sheet.png')
-        self.xpImage = self.xpSprite.getImage(round((self.level*10)%10),178,18,const.scale/2)
+        self.image = Image(f"images/cards/card{self.imageNum}").texture
+        self.xpSprite = SpriteSheet('images/xp_sheet.png', (178, 18))
+        self.xpImage = self.xpSprite.getImage(round((self.level*10)%10))
         self.ready = False
 
     # Activates the card and starts the active timer if the card is not on cooldown
@@ -300,18 +300,11 @@ class KindnessCard(StrengthCard):
 class LoveCard(StrengthCard):
     def __init__(self):
         super().__init__(11)
-        self.cardSprite = spriteSheet.SpriteSheet('images/love_jetpack.png')
-        self.image = self.cardSprite.getImage(0,250,350,const.scale/2).copy()
+        self.cardSprite = SpriteSheet('images/love_jetpack.png', (250,350))
+        self.image = self.cardSprite.getImage(0)
         self.batteryReset = 1
         self.battery = self.batteryReset
         self.timerMax = 1*60
-
-    def blitXP(self, n=0):
-        self.image = self.cardSprite.getImage(n,250,350,const.scale/2).copy()
-        self.xpImage = self.xpSprite.getImage(round((self.level*10)%10),178,18,const.scale/2)
-        self.lvlText.setText(f"-{round(self.level)}-")
-        self.image.blit(self.xpImage,(18,150))
-        self.image.blit(self.lvlText.surfaces[0], (52,138))
 
     def tryActivate(self, floor):
         leveledUp = False
