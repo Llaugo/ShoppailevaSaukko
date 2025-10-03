@@ -10,7 +10,7 @@ from playerClass import Player
 import strengthMenu
 import const
 
-
+# Default font Courier-Prime
 LabelBase.register(
     name="Roboto",  # override Kivy's default family
     fn_regular="fonts/Courier_Prime/CourierPrime-Regular.ttf",

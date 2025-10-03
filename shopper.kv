@@ -70,6 +70,20 @@
     border: 0,0,0,0
     size_hint: None, None
 
+<CardButton>:
+    #allow_stretch: True
+    #keep_ratio: True
+    on_press:
+        app.root.get_screen('strengths').on_card_tap(self.index)
+    # Arrow pointing at the selected card
+    Image:
+        source: root.arrow_src
+        size_hint: None, None
+        # scale arrow relative to card size (tweak factor)
+        size: min(root.width, root.height) * 0.85, min(root.width, root.height) * 0.85
+        opacity: 1 if root.selected else 0
+        center: root.center_x - self.width/2, root.y - dp(48)
+
 <StrengthMenu>:
     canvas:
         Color:
@@ -84,23 +98,49 @@
         pos: 0, 0
         size: Window.size
         center: Window.center
+    Label:
+        id: selectcategory
+        text: "Vahvuudet"
+        font_size: bg.norm_image_size[0] * 0.040
+        color: (0,0,0)
+        center: (bg.center_x + bg.norm_image_size[0]*0.0000, bg.center_y + bg.norm_image_size[1]*0.4000)
+    Label:
+        id: selectcategory
+        text: "Valitse korttipino"
+        font_size: bg.norm_image_size[0] * 0.013
+        color: (0,0,0)
+        center: (bg.center_x + bg.norm_image_size[0]*0.0970, bg.center_y + bg.norm_image_size[1]*0.0450)
+    Label:
+        id: selecttitle
+        text: ""
+        font_size: bg.norm_image_size[0] * 0.015
+        color: (0,0,0)
+        center: (bg.center_x + bg.norm_image_size[0]*0.0970, bg.center_y + bg.norm_image_size[1]*0.0200)
     # Odd cardpiles
     GridLayout:
+        id: row1
         cols: 3
+        spacing: bg.norm_image_size[0]*0.0635
         size_hint: None, None
+        size: self.minimum_size
         row_default_height: bg.norm_image_size[1]*0.055
         row_force_default: True
-        id: row1
-        spacing: bg.norm_image_size[0]*0.0635
-        pos: 
-            (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1653/4000.), \
-            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(1222/2000.)
+        pos: (bg.center_x - self.width/2 + bg.norm_image_size[0]*0.0695, bg.center_y - self.height/2 + bg.norm_image_size[1]*0.159)
         Label:
-            text: "0"
+            id: label0
+            text: "Viisaus ja tieto"
+            font_size: self.height * 0.4
+            color: (0,0,0)
         Label:
-            text: "2"
+            id: label2
+            text: "Inhimillisyys"
+            font_size: self.height * 0.4
+            color: (0,0,0)
         Label:
-            text: "4"
+            id: label4
+            text: "Kohtuullisuus"
+            font_size: self.height * 0.4
+            color: (0,0,0)
         DeckButton:
             id: deck0
             index: 0
@@ -120,16 +160,12 @@
     GridLayout:
         cols: 3
         id: row2
-        spacing: bg.norm_image_size[0]*0.0635
-        pos: 
-            (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1905/4000.), \
-            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(1190/2000.)
-        Label:
-            text: "1"
-        Label:
-            text: "1"
-        Label:
-            text: "1"
+        spacing: bg.norm_image_size[0]*0.0635, -bg.norm_image_size[1]*0.010
+        size_hint: None, None
+        size: self.minimum_size
+        row_default_height: bg.norm_image_size[1]*0.055
+        row_force_default: True
+        pos: (bg.center_x - self.width/2 + bg.norm_image_size[0]*0.132, bg.center_y - self.height/2 + bg.norm_image_size[1]*0.031)
         DeckButton:
             id: deck1
             index: 1
@@ -145,23 +181,38 @@
             index: 5
             size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
             on_release: root.selectDeck(self.index)
+        Label:
+            id: label1
+            text: "Rohkeus"
+            font_size: self.height * 0.4
+            color: (0,0,0)
+        Label:
+            id: label3
+            text: "Oikeudenmukaisuus"
+            font_size: self.height * 0.4
+            color: (0,0,0)
+        Label:
+            id: label5
+            text: "Henkisyys"
+            font_size: self.height * 0.4
+            color: (0,0,0)
     # Chosen cards
     RecycleView:
         id: cards_rv
-        viewclass: "Image"
+        viewclass: "CardButton"
         size_hint: None, None
         do_scroll_y: False
         pos: 
             (bg.center_x - bg.norm_image_size[0]/2) + bg.norm_image_size[0]*(1610/4000.), \
-            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(620/2000.)
+            (bg.center_y - bg.norm_image_size[1]/2) + bg.norm_image_size[1]*(220/2000.)
         width:  (bg.norm_image_size[0]*(250/4000.)*5) * 1.1 + (bg.norm_image_size[0]*0.019*4) * 1.1  # 5 cards + 4 gaps
-        height: bg.norm_image_size[1]*(350/2000.) * 1.1                                       # card_h
+        height: bg.norm_image_size[1]*(350/2000.) * 1.1 + bg.norm_image_size[1]*0.2       # card_h + leeway for arrow
         RecycleBoxLayout:
             id: cards_rv_layout
             default_size: (bg.norm_image_size[0]*(250/4000.)) * 1.1, (bg.norm_image_size[1]*(350/2000.)) * 1.1
             default_size_hint: None, None
-            height: bg.norm_image_size[1] * (350/2000.) * 1.1
             size_hint_y: None
+            height: bg.norm_image_size[1] * (350/2000.) * 1.1
             spacing: bg.norm_image_size[0]*0.0115
         
     # Buttons
@@ -199,7 +250,7 @@
             size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
             background_normal: "images/buttons/longbutton0.png"
             background_down:  "images/buttons/longbutton1.png"
-        
+
 
 <SettingsScreen>:
     canvas:
