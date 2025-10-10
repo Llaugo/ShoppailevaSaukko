@@ -6,6 +6,7 @@ from kivy.animation import Animation
 from kivy.app import App
 import strengthCard
 from spriteSheet import SpriteSheet
+import random
 
 class DeckButton(ButtonBehavior, Image):
     index = NumericProperty(0)
@@ -55,10 +56,14 @@ class StrengthMenu(Screen):
     def labelAt(self,i):
         return self.ids.get(f"label{i}")
     
+    def coverAt(self,i):
+        return self.ids.get(f"cover{i}")
+    
     def restoreDeck(self, i):
         b = self.deckAt(i)
         if b:
             b.opacity = 1
+            self.coverAt(i).opacity = 1
 
     def clearCards(self):
         self.ids.cards_rv.data = []
@@ -70,6 +75,7 @@ class StrengthMenu(Screen):
         self.ids.selecttitle.text = self.labelAt(i).text
         self.ids.selectcategory.text = self.tr("strengths.pickcard")
         d.opacity = 0
+        self.coverAt(i).opacity = 0
         rv = self.ids.cards_rv
         layout = rv.children[0]
         orig_spc = layout.spacing
@@ -79,9 +85,21 @@ class StrengthMenu(Screen):
     def on_card_tap(self, i):
         if self.inspectPile == -1: return
         self.favorites[self.inspectPile] = i
+        self.coverAt(self.inspectPile).source = f"images/cards/card{self.decks[self.inspectPile][i]}.png"
         rv = self.ids.cards_rv
         for k in range(len(rv.data)):
             rv.data[k]["selected"] = (k == i)
         rv.refresh_from_data()
+
+    def randomizeFavo(self):
+        self.favorites = []
+        for i in range(len(self.decks)):
+            pickedCard = random.randint(0, len(self.decks[i])-1)
+            self.favorites.append(pickedCard)
+            self.coverAt(i).source = f"images/cards/card{self.decks[i][pickedCard]}.png"
+        if self.inspectPile != -1:
+            fav = self.favorites[self.inspectPile]
+            cards = self.decks[self.inspectPile]
+            self.ids.cards_rv.data = [{"source": f"images/cards/card{c}.png", "index": j, "selected": (j == fav)} for j, c in enumerate(cards)]
             
 

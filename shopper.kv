@@ -120,7 +120,7 @@
     Label:
         id: infotext
         text: app.tr("strengths.info")
-        text_size: self.width*0.16, None
+        text_size: bg.norm_image_size[0]*0.16, None
         size_hint_y: None
         font_size: bg.norm_image_size[0] * 0.0090
         color: (0,0,0)
@@ -225,6 +225,56 @@
             size_hint_y: None
             height: bg.norm_image_size[1] * (350/2000.) * 1.1
             spacing: bg.norm_image_size[0]*0.0115
+
+    # Card images covering decks
+    GridLayout:
+        cols: 3
+        id: cardrow1
+        spacing: bg.norm_image_size[0]*0.0635, -bg.norm_image_size[1]*0.010
+        size_hint: None, None
+        size: self.minimum_size
+        row_default_height: bg.norm_image_size[1]*0.055
+        row_force_default: True
+        pos: (bg.center_x - self.width/2 + bg.norm_image_size[0]*0.0695, bg.center_y - self.height/2 + bg.norm_image_size[1]*0.0550)
+        Image:
+            id: cover0
+            source: "images/cards/card0.png"
+            size_hint: None, None
+            size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
+        Image:
+            id: cover2
+            source: "images/cards/card10.png"
+            size_hint: None, None
+            size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
+        Image:
+            id: cover4
+            source: "images/cards/card17.png"
+            size_hint: None, None
+            size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
+    GridLayout:
+        cols: 3
+        id: cardrow2
+        spacing: bg.norm_image_size[0]*0.0635, -bg.norm_image_size[1]*0.010
+        size_hint: None, None
+        size: self.minimum_size
+        row_default_height: bg.norm_image_size[1]*0.055
+        row_force_default: True
+        pos: (bg.center_x - self.width/2 + bg.norm_image_size[0]*0.132, bg.center_y - self.height/2 + bg.norm_image_size[1]*0.0410)
+        Image:
+            id: cover1
+            source: "images/cards/card5.png"
+            size_hint: None, None
+            size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
+        Image:
+            id: cover3
+            source: "images/cards/card14.png"
+            size_hint: None, None
+            size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
+        Image:
+            id: cover5
+            source: "images/cards/card21.png"
+            size_hint: None, None
+            size: (bg.norm_image_size[0]*(246/4000.)), (bg.norm_image_size[1]*(386/2000.))
         
     # Buttons
     BoxLayout:
@@ -252,6 +302,7 @@
             size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
             background_normal: "images/buttons/longbutton0.png"
             background_down:  "images/buttons/longbutton1.png"
+            on_release: root.randomizeFavo()
         Button:
             color: (0,0,0,1)
             font_size: bg.norm_image_size[0]*0.009
@@ -270,14 +321,13 @@
         Rectangle:
             pos: self.pos
             size: self.size
-
     Button:
         color: (0,0,0,1)
-        font_size: 8
-        text: "Back to main menu"
+        font_size: 14
+        text: app.tr("strengths.back")
         border: 0,0,0,0
         size_hint: None, None
-        size: 400/4, 100/4
+        size: dp(100), dp(25)
         pos_hint: {"left": 0.01, "top": 0.99}
         background_normal: "images/buttons/longbutton0.png"
         background_down:  "images/buttons/longbutton1.png"
@@ -292,11 +342,11 @@
             size: self.size
     Button:
         color: (0,0,0,1)
-        font_size: 8
-        text: "Back to main menu"
+        font_size: 14
+        text: app.tr("strengths.back")
         border: 0,0,0,0
         size_hint: None, None
-        size: 400/4, 100/4
+        size: dp(100), dp(25)
         pos_hint: {"left": 0.01, "top": 0.99}
         background_normal: "images/buttons/longbutton0.png"
         background_down:  "images/buttons/longbutton1.png"

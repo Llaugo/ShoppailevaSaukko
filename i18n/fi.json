@@ -5,6 +5,7 @@
     "menu.settings": "Asetukset",
     "menu.info": "?",
     "menu.quit": "Poistu",
+    "menu.back": "Takaisin päävalikkoon",
     "strengths.title": "Vahvuudet",
     "strengths.pile1": "Viisaus ja tieto",
     "strengths.pile2": "Rohkeus",
@@ -17,5 +18,5 @@
     "strengths.back": "Takaisin päävalikkoon",
     "strengths.random": "Arvo vahvuudet",
     "strengths.start": "Aloita seikkailu",
-    "strengths.info": "Valitse yksi vahvuus jokaisesta kategoriasta. Saat lisätietoa mistä tahansa kortista vetämällä sen minulle. Voit myös arpoa kaikki vahvuudet, jos et halua itse valita niitä."
+    "strengths.info": "Valitse yksi vahvuus jokaisesta kategoriasta. Saat lisätietoa mistä tahansa kortista valitsemalla sen. Voit myös arpoa kaikki vahvuudet, jos et halua itse valita niitä."
 }
