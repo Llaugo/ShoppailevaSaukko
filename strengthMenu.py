@@ -3,6 +3,7 @@ from kivy.uix.image import Image
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import NumericProperty, ListProperty, BooleanProperty, StringProperty
 from kivy.animation import Animation
+from kivy.app import App
 import strengthCard
 from spriteSheet import SpriteSheet
 
@@ -18,12 +19,16 @@ class StrengthMenu(Screen):
     inspectPile = NumericProperty(-1)
     decks = ListProperty()
     favorites = ListProperty([0, 0, 0, 0, 0, 0])
+
+    @property
+    def tr(self):
+        return App.get_running_app().tr
     
     def on_kv_post(self, _):
         self.decks: list[list[int]] = []
         self.cardSprite = SpriteSheet('images/strength_sheet.png', (246, 386))
         for i in range(26):
-            if i == 0 or i == 5 or i == 10 or i == 14 or i == 17 or i == 21:
+            if i in (0, 5, 10, 14, 17, 21):
                 self.decks.append([])
             self.decks[-1].append(i)
         self.favorites: list[int] = [0, 0, 0, 0, 0, 0]
@@ -36,12 +41,12 @@ class StrengthMenu(Screen):
         if self.inspectPile == i:
             self.inspectPile = -1
             self.ids.selecttitle.text = ""
-            self.ids.selectcategory.text = "Valitse korttipino"
+            self.ids.selectcategory.text = self.tr("strengths.pickpile")
             return
         self.inspectPile = i
         fav = self.favorites[i]
         cards = self.decks[i]
-        self.ids.cards_rv.data = [{"source": f"images/cards/card{c}.png", "index": j, "selected": (j == fav)} for c, j in enumerate(cards)]
+        self.ids.cards_rv.data = [{"source": f"images/cards/card{c}.png", "index": j, "selected": (j == fav)} for j, c in enumerate(cards)]
         self.openDeck(i)
 
     def deckAt(self,i):
@@ -63,7 +68,7 @@ class StrengthMenu(Screen):
         if not d:
             return
         self.ids.selecttitle.text = self.labelAt(i).text
-        self.ids.selectcategory.text = "Valitse vahvuus kategoriasta"
+        self.ids.selectcategory.text = self.tr("strengths.pickcard")
         d.opacity = 0
         rv = self.ids.cards_rv
         layout = rv.children[0]

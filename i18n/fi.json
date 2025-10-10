@@ -1,0 +1,21 @@
+{
+    "menu.gamename": "Shoppaileva Saukko",
+    "menu.newgame": "Uusi peli",
+    "menu.continue": "Jatka peliä",
+    "menu.settings": "Asetukset",
+    "menu.info": "?",
+    "menu.quit": "Poistu",
+    "strengths.title": "Vahvuudet",
+    "strengths.pile1": "Viisaus ja tieto",
+    "strengths.pile2": "Rohkeus",
+    "strengths.pile3": "Inhimillisyys",
+    "strengths.pile4": "Oikeudenmukaisuus",
+    "strengths.pile5": "Kohtuullisuus",
+    "strengths.pile6": "Henkisyys",
+    "strengths.pickpile": "Valitse korttipino",
+    "strengths.pickcard": "Valitse vahvuus kategoriasta",
+    "strengths.back": "Takaisin päävalikkoon",
+    "strengths.random": "Arvo vahvuudet",
+    "strengths.start": "Aloita seikkailu",
+    "strengths.info": "Valitse yksi vahvuus jokaisesta kategoriasta. Saat lisätietoa mistä tahansa kortista vetämällä sen minulle. Voit myös arpoa kaikki vahvuudet, jos et halua itse valita niitä."
+}

@@ -1,0 +1,12 @@
+{
+    "app.title": "Shopper",
+    "menu.play": "Play",
+    "menu.options": "Options",
+    "menu.quit": "Quit",
+    "strength.title": "Strengths",
+    "strength.pick_deck": "Choose a deck",
+    "strength.pick_card": "Choose a strength from the category",
+    "button.back": "Back to main menu",
+    "button.randomize": "Randomize",
+    "button.start": "Start the adventure!"
+}
