@@ -2,11 +2,12 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.widget import Widget
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
-from kivy.properties import ObjectProperty, DictProperty, StringProperty
+from kivy.properties import DictProperty, StringProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
 from kivy.core.text import LabelBase
 from playerClass import Player
+from game import ShopperGame
 import json, os
 import strengthMenu
 import const
@@ -20,10 +21,17 @@ LabelBase.register(
     fn_bolditalic="fonts/Courier_Prime/CourierPrime-Bolditalic.ttf",
 )
 
-class ShopperGame(Widget):
-    player = ObjectProperty(None)
-    def update(self, dt):
-        pass
+class GameScreen(Screen):
+    def on_enter(self, *_):
+        g = self.ids.game
+        self._kd, self._ku = g.on_key_down, g.on_key_up
+        Window.bind(on_key_down=self._kd, on_key_up=self._ku)
+        Clock.schedule_interval(g.update, 1/60)
+
+    def on_leave(self, *_):
+        g = self.ids.game
+        Window.unbind(on_key_down=self._kd, on_key_up=self._ku)
+        Clock.unschedule(g.update)
 
 class MenuScreen(Screen):
     pass
@@ -45,6 +53,7 @@ class ShopperApp(App):
         sm.add_widget(strengthMenu.StrengthMenu(name='strengths'))
         sm.add_widget(SettingsScreen(name='settings'))
         sm.add_widget(QuestionScreen(name='?'))
+        sm.add_widget(GameScreen(name='game'))
         return sm
     
     def setLanguage(self, newLang):

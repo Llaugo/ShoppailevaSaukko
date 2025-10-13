@@ -313,6 +313,7 @@
             size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
             background_normal: "images/buttons/longbutton0.png"
             background_down:  "images/buttons/longbutton1.png"
+            on_release: root.manager.current = 'game'
 
 
 <SettingsScreen>:
@@ -352,11 +353,58 @@
         background_normal: "images/buttons/longbutton0.png"
         background_down:  "images/buttons/longbutton1.png"
         on_release: root.manager.current = 'menu'
-
+# Game screen
+<GameScreen>:
+    ShopperGame:
+        id: game
+# Player
 <Player>:
-    size: 36, 41
     canvas:
+        Color: 
+            rgba: 1, 1, 1, 1      # neutral (no tint)
         Rectangle:
             pos: self.pos
             size: self.size
             texture: root.texture
+
+# Tiles
+<Tile>:
+    canvas:
+        Color: 
+            rgba: 1, 1, 1, 1      # neutral (no tint)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            texture: root.texture
+# Rooms
+<Room>:
+    GridLayout:
+        id: grid
+        cols: 1
+        size_hint: None, None
+        size: self.minimum_size
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        row_force_default: True
+        col_force_default: True
+        row_default_height: dp(46)
+        col_default_width:  dp(46)
+
+# The game
+<ShopperGame>:
+    canvas.before:
+        Color: 
+            rgba: 0.627,0.820,1,1
+            #rgba: 1,1,1,1
+        Rectangle: 
+            pos: self.pos
+            size: self.size
+    Room:
+        id: room
+        center: root.center
+    Player:
+        id: player
+        size_hint: None, None
+        size: 36*2, 41*2
+        center: root.center
+
+

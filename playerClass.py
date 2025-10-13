@@ -1,14 +1,46 @@
 from kivy.uix.widget import Widget
-from kivy.properties import (ObjectProperty)
+from kivy.properties import ObjectProperty, NumericProperty
 from spriteSheet import SpriteSheet
 
 class Player(Widget):
-    texture = ObjectProperty(None)  # will hold a Texture
+    texture = ObjectProperty(None)  # holds a Texture
+    speed  = NumericProperty(100)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        sheet = SpriteSheet("images/player_sheet.png", (36, 41))
-        self.texture = sheet.getImage(0)
+        self.sheet = SpriteSheet("images/player_sheet.png", (36, 41))
+        self.texture = self.sheet.getImage(0)
+        self.facing = 0 # 0,1,2,3 = down,right,up,left
+        self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
 
+    def update(self, dt, game):
+        keys = game.pressed
+        dx = 0
+        dy = 0
+        if ord('s') in keys: # Down key or button
+            self.facing = 0
+            dy -= 1
+        elif ord('d') in keys: # Right key or button
+            self.facing = 1
+            dx += 1
+        elif ord('w') in keys: # Up key or button
+            self.facing = 2
+            dy += 1
+        elif ord('a') in keys: # Left key or button
+            self.facing = 3
+            dx -= 1
+        if not dx and not dy: # If there's no movement, we want the first picture of the animation (standing)
+            self.walking = 0
+        else:
+            s = self.speed*dt
+            if dy: 
+                self.y += dy * s # Prefer vertical movement
+            elif dx: 
+                self.x += dx * s # Move horizontally
+            self.walking = (self.walking + s/40.0) % 4
+            animationFrame = self.facing*4 + round(self.walking) % 4 # Get the correct image (frame of the animation)
+            self.texture = self.sheet.getImage(animationFrame)
+            
     
 
     '''
