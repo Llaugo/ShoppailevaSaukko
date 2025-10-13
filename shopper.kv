@@ -83,7 +83,7 @@
         size: min(root.width, root.height) * 0.85, min(root.width, root.height) * 0.85
         opacity: 1 if root.selected else 0
         center: root.center_x, root.y
-
+# Menu for selecting strength cards
 <StrengthMenu>:
     canvas:
         Color:
@@ -119,6 +119,7 @@
     # Info text (speech bubble)
     Label:
         id: infotext
+        markup: True
         text: app.tr("strengths.info")
         text_size: bg.norm_image_size[0]*0.16, None
         size_hint_y: None

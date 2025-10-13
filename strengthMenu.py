@@ -39,10 +39,11 @@ class StrengthMenu(Screen):
         if self.inspectPile != -1:
             self.restoreDeck(self.inspectPile)
             self.clearCards()
-        if self.inspectPile == i:
+        if self.inspectPile == i: # Toggle current deck off
             self.inspectPile = -1
             self.ids.selecttitle.text = ""
             self.ids.selectcategory.text = self.tr("strengths.pickpile")
+            self.changeInfo(self.inspectPile)
             return
         self.inspectPile = i
         fav = self.favorites[i]
@@ -68,6 +69,14 @@ class StrengthMenu(Screen):
     def clearCards(self):
         self.ids.cards_rv.data = []
 
+    # Change the info text
+    # i: index of the text wanted. -1 for default
+    def changeInfo(self, i):
+        if i == -1:
+            self.ids.infotext.text = self.tr("strengths.info")
+        else:
+            self.ids.infotext.text = self.tr(f"strengths.card{i}_info")
+
     def openDeck(self, i):
         d = self.deckAt(i)
         if not d:
@@ -83,9 +92,11 @@ class StrengthMenu(Screen):
         Animation(spacing=orig_spc, duration=0.3, t='out_cubic').start(layout)
 
     def on_card_tap(self, i):
-        if self.inspectPile == -1: return
-        self.favorites[self.inspectPile] = i
-        self.coverAt(self.inspectPile).source = f"images/cards/card{self.decks[self.inspectPile][i]}.png"
+        if self.inspectPile == -1:
+            return
+        self.favorites[self.inspectPile] = i # Set favourite of the pile
+        self.coverAt(self.inspectPile).source = f"images/cards/card{self.decks[self.inspectPile][i]}.png" # Change the pile cover
+        self.changeInfo(self.decks[self.inspectPile][i])
         rv = self.ids.cards_rv
         for k in range(len(rv.data)):
             rv.data[k]["selected"] = (k == i)
