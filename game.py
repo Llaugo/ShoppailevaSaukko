@@ -3,12 +3,13 @@ from kivy.properties import ObjectProperty
 from kivy.clock import Clock
 from kivy.core.window import Window
 
+import const
 import room
-import utils
 
 # Class for the game (floors)
 class ShopperGame(Widget):
     player = ObjectProperty(None)
+    currentRoom = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -17,8 +18,9 @@ class ShopperGame(Widget):
         Clock.schedule_interval(self.update, 1/60)
 
     def on_kv_post(self, _):
-        layout = utils.readLayout("rooms/lift.csv")  # returns [matrix]
-        self.ids.room.setRoom(layout)
+        self.currentRoom = self.ids.room
+        layout = const.testRoom
+        self.currentRoom.setRoom(layout[0])
 
     def on_key_down(self, _win, key, _sc, _cp, _mods):
         self.pressed.add(key); return True

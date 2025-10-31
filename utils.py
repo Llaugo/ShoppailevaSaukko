@@ -22,3 +22,20 @@ def readLayout(file):
         if currentLayout:
             layouts.append(currentLayout)
     return layouts
+
+# Calculate the intersection of two widgets.
+# Return the intersection rectangle and None if no intersection.
+def intersect_rects(a, b):
+    ax, ay, aw, ah = rect_in_window(a)
+    bx, by, bw, bh = rect_in_window(b)
+    x1 = max(ax, bx)
+    y1 = max(ay, by)
+    x2 = min(ax + aw, bx + bw)
+    y2 = min(ay + ah, by + bh)
+    w, h = x2 - x1, y2 - y1
+    return (x1, y1, w, h) if (w > 0 and h > 0) else None
+
+def rect_in_window(w):
+    x1, y1 = w.to_window(*w.pos)
+    x2, y2 = w.to_window(w.right, w.top)
+    return x1, y1, x2 - x1, y2 - y1

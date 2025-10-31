@@ -1,10 +1,14 @@
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty, NumericProperty
 from spriteSheet import SpriteSheet
+import math
+import const
+import utils
+import room
 
 class Player(Widget):
     texture = ObjectProperty(None)  # holds a Texture
-    speed  = NumericProperty(100)
+    speed  = NumericProperty(const.basePlayerSpeed)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -12,6 +16,7 @@ class Player(Widget):
         self.texture = self.sheet.getImage(0)
         self.facing = 0 # 0,1,2,3 = down,right,up,left
         self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
+        self.flyDuration = 0
 
     def update(self, dt, game):
         keys = game.pressed
@@ -31,17 +36,50 @@ class Player(Widget):
             dx -= 1
         if not dx and not dy: # If there's no movement, we want the first picture of the animation (standing)
             self.walking = 0
-        else:
-            s = self.speed*dt
-            if dy: 
-                self.y += dy * s # Prefer vertical movement
-            elif dx: 
-                self.x += dx * s # Move horizontally
-            self.walking = (self.walking + s/40.0) % 4
-            animationFrame = self.facing*4 + round(self.walking) % 4 # Get the correct image (frame of the animation)
-            self.texture = self.sheet.getImage(animationFrame)
+        s = self.speed*dt
+        if dy: 
+            self.y += dy * s # Prefer vertical movement
+        elif dx: 
+            self.x += dx * s # Move horizontally
+        self.walking = (self.walking + s/40.0) % 4
+        animationFrame = self.facing*4 + round(self.walking) % 4 # Get the correct image (frame of the animation)
+        self.texture = self.sheet.getImage(animationFrame)
+        self.resolveCollision(game.currentRoom)
+
+    def resolveCollision(self, room: room.Room, preferDir=None):
+        solids = room.walls.copy()
+        solids += room.shelves.copy()
+        #if self.flyDuration > 1:
+        #    solids = room.wallRects.copy()
+        #else:
+        #    solids = room.solidRects.copy()
+        #    if not self.swimDuration:
+        #        solids += room.waterRects
+        #    if not self.npcCollDuration:
+        #        for npc in room.npcs:
+        #            solids.append(npc.rect)
+        collided = False
+        for solid in solids:                                # Check all the solid rects in the room
+            if self.collide_widget(solid):
+                overlap = utils.intersect_rects(self, solid)             # Compute overlap rectangle
+                if overlap: 
+                    if preferDir == "x" or (overlap[2] < overlap[3] and preferDir != "y"): # Choose the smaller overlap dimension if there is no preferation
+                        if self.center_x > overlap[0]+overlap[2]/2:   # Player is on right side of tile -> push right
+                            #self.x = solid.right
+                            self.x = min(self.x + math.ceil(self.width/2), solid.right)
+                        else:
+                            #self.right = solid.x
+                            self.right = max(self.right - math.ceil(self.width/2), solid.x)
+                    else:
+                        if self.center_y > overlap[1]+overlap[3]/2:   # Player is above tile -> push up
+                            #self.y = solid.top
+                            self.y = min(self.y + math.ceil(self.height/2), solid.top)
+                        else:
+                            #self.top = solid.y
+                            self.top = max(self.top - math.ceil(self.height/2), solid.y)
+                    collided = True
+        return collided
             
-    
 
     '''
     # controls: Consists of four control buttons (d,r,u,l) of the Button class

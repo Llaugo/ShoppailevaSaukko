@@ -1,23 +1,10 @@
-#import layoutLoader
-
-
-# Initial world dimensions
-worldWidth = 1400
-worldHeight = 700
-
-# Scale used for image sizes
-# DON'T CHANGE from 1, not implemented to everywhere
-scale = 1
-
-# Different font sizes
-#def gameFont(size=30):
-#    return pygame.font.SysFont("Courier", size)
+import utils
 
 # Tile size (square of (tileSize x tileSize))
 tileSize = 46
 
 # Player's base stats
-basePlayerSpeed = 2                # Speed
+basePlayerSpeed = 100                # Speed
 basePlayerStrength = 0             # Strength
 basePlayerSpeechDuration = 120     # Speech text visibility duration
 
@@ -70,10 +57,10 @@ One layout is a square of numbers, each number representing a type of tile.
 7 = Water
 8 = Advert screen
 '''
-#lobbyLayout  = layoutLoader.readLayout("rooms/lift.csv")
-#startLayouts = layoutLoader.readLayout("rooms/startRooms.csv")
-#roomLayouts  = layoutLoader.readLayout("rooms/roomLayouts.csv")
-#testRoom     = layoutLoader.readLayout("rooms/testRoom.csv")
+lobbyLayout  = utils.readLayout("rooms/lift.csv")
+startLayouts = utils.readLayout("rooms/startRooms.csv")
+roomLayouts  = utils.readLayout("rooms/roomLayouts.csv")
+testRoom     = utils.readLayout("rooms/testRoom.csv")
 
 '''
 All the words and sentences used in the game in different languages.
