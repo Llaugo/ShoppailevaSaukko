@@ -12,7 +12,6 @@
     Image:
         id: bg
         source: "images/menu_screen.png"
-        pos: 0, 0
         size: Window.size
         center: Window.center
 
@@ -359,12 +358,13 @@
         id: game
 # Player
 <Player>:
+    size_hint: None, None
     canvas:
         Color: 
             rgba: 1, 1, 1, 1      # neutral (no tint)
         Rectangle:
-            pos: self.pos
-            size: self.size
+            pos: self.x - self.vis_pad, self.y
+            size: self.width + 2*self.vis_pad, self.height + 2*self.vis_pad
             texture: root.texture
 
 # Tiles
@@ -391,21 +391,24 @@
 
 # The game
 <ShopperGame>:
-    canvas.before:
+    canvas:
         Color: 
-            rgba: 0.627,0.820,1,1
-            #rgba: 1,1,1,1
+            rgba: 0.627,0.8820,1,1
         Rectangle: 
             pos: self.pos
             size: self.size
-    currentRoom: room
-    Room:
-        id: room
-        center: root.center
-    Player:
-        id: player
-        size_hint: None, None
-        size: 36*2, 41*2
-        center: root.center
+    Image:
+        id: bg
+        source: "images/game_background.png"
+        size: root.size
+    ScatterLayout:
+        id: world
+        size: root.design_w, root.design_h
+        center: bg.center
+        Room:
+            id: room
+        Player:
+            id: player
+            center: root.design_w/2, root.design_h/2+self.height/4
 
 

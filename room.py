@@ -1,11 +1,13 @@
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ListProperty
+from kivy.properties import NumericProperty
 
 import random
 from tile import Tile
 import const
 
 class Room(FloatLayout):
+    tileSize = NumericProperty(const.tileSize)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.layout = None # Each tile in a grid

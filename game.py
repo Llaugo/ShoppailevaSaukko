@@ -1,5 +1,5 @@
 from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, NumericProperty
 from kivy.clock import Clock
 from kivy.core.window import Window
 
@@ -8,6 +8,8 @@ import room
 
 # Class for the game (floors)
 class ShopperGame(Widget):
+    design_w = NumericProperty(const.worldWidth)
+    design_h = NumericProperty(const.worldHeigth)
     player = ObjectProperty(None)
     currentRoom = ObjectProperty(None)
 
@@ -21,6 +23,15 @@ class ShopperGame(Widget):
         self.currentRoom = self.ids.room
         layout = const.testRoom
         self.currentRoom.setRoom(layout[0])
+        bg = self.ids.bg
+        def rescale(*_):
+            if not bg.texture:
+                return
+            drawn_w, drawn_h = bg.norm_image_size # actual rendered size
+            scale = min(drawn_w/self.design_w, drawn_h/self.design_h) # uniform scale to fit
+            self.ids.world.scale = scale
+        self.size = Window.size
+        self.bind(size=rescale)
 
     def on_key_down(self, _win, key, _sc, _cp, _mods):
         self.pressed.add(key); return True
@@ -30,4 +41,5 @@ class ShopperGame(Widget):
     def update(self, dt):
         player = self.ids.player
         player.update(dt, self)
+
         

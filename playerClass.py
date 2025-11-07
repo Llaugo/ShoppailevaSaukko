@@ -9,6 +9,7 @@ import room
 class Player(Widget):
     texture = ObjectProperty(None)  # holds a Texture
     speed  = NumericProperty(const.basePlayerSpeed)
+    vis_pad = NumericProperty(const.playerPadding)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

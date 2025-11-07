@@ -1,5 +1,9 @@
 import utils
 
+# Initial world resolution
+worldWidth = 4000
+worldHeigth = 2000
+
 # Tile size (square of (tileSize x tileSize))
 tileSize = 46
 
@@ -7,6 +11,8 @@ tileSize = 46
 basePlayerSpeed = 100                # Speed
 basePlayerStrength = 0             # Strength
 basePlayerSpeechDuration = 120     # Speech text visibility duration
+playerDimensions = (36, 41)
+playerPadding = 0
 
 # Floor constants
 floorTime = 300     # How much time (sec) there is in each level (300 = 5min)
