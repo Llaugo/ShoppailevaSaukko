@@ -67,5 +67,5 @@ class ShopperApp(App):
         return self.i18n.get(key, key)
 
 if __name__ == '__main__':
-    Window.size = (1000, 700)
+    Window.size = (1000, 500)
     ShopperApp().run()

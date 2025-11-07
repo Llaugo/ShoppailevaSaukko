@@ -33,6 +33,12 @@ class ShopperGame(Widget):
         self.size = Window.size
         self.bind(size=rescale)
 
+        grid = self.currentRoom.ids.grid
+        grid.col_default_width = const.worldHeigth/(const.floorSize*1.7)
+        grid.row_default_height = const.worldHeigth/(const.floorSize*1.7)
+        player = self.ids.player
+        player.size = (player.width*0.8, player.height*0.8)
+
     def on_key_down(self, _win, key, _sc, _cp, _mods):
         self.pressed.add(key); return True
     def on_key_up(self, _win, key, *_):

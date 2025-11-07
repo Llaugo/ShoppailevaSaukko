@@ -26,12 +26,12 @@ def readLayout(file):
 # Calculate the intersection of two widgets.
 # Return the intersection rectangle and None if no intersection.
 def intersect_rects(a, b):
-    ax, ay, aw, ah = rect_in_window(a)
-    bx, by, bw, bh = rect_in_window(b)
-    x1 = max(ax, bx)
-    y1 = max(ay, by)
-    x2 = min(ax + aw, bx + bw)
-    y2 = min(ay + ah, by + bh)
+    #ax, ay, aw, ah = rect_in_window(a)
+    #bx, by, bw, bh = rect_in_window(b)
+    x1 = max(a.x, b.x)
+    y1 = max(a.y, b.y)
+    x2 = min(a.x + a.width, b.x + b.width)
+    y2 = min(a.y + a.height, b.y + b.height)
     w, h = x2 - x1, y2 - y1
     return (x1, y1, w, h) if (w > 0 and h > 0) else None
 

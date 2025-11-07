@@ -21,6 +21,9 @@ class Room(FloatLayout):
         self.waters = []                        # watertiles in the room
         self.adverts = []                       # adverts in the room
 
+    def on_kv_post(self, _):
+        pass
+
     def setRoom(self, layout):
         org_layout = layout
         g = self.ids.grid
