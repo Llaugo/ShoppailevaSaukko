@@ -4,18 +4,23 @@ import utils
 worldWidth = 4000
 worldHeigth = 2000
 
+max_dt = 1/10
+max_fps = 1/120
+max_steps_per_frame = 20
+
+
 # Tile size (square of (tileSize x tileSize))
 tileSize = 46
 
 # Player's base stats
-basePlayerSpeed = 150                # Speed
+basePlayerSpeed = 300                # Speed
 basePlayerStrength = 0             # Strength
 basePlayerSpeechDuration = 120     # Speech text visibility duration
 playerDimensions = (36, 41)
 playerPadding = 12
 
 # Floor constants
-floorTime = 300     # How much time (sec) there is in each level (300 = 5min)
+floorTime = 3     # How much time (sec) there is in each level (300 = 5min)
 floorTimeMin = 297  # How much time has to be spent on a level before exit is possible
 floorSize = 9       # Floor size (floorSize x floorSize rooms)
 

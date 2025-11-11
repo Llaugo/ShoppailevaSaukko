@@ -12,12 +12,12 @@ class ShopperGame(Widget):
     design_h = NumericProperty(const.worldHeigth)
     player = ObjectProperty(None)
     currentRoom = ObjectProperty(None)
+    timer = NumericProperty(const.floorTime)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.pressed = set()
         Window.bind(on_key_down=self.on_key_down, on_key_up=self.on_key_up)
-        Clock.schedule_interval(self.update, 1/60)
 
     def on_kv_post(self, _):
         self.currentRoom = self.ids.room
@@ -46,6 +46,9 @@ class ShopperGame(Widget):
     
     def update(self, dt):
         player = self.ids.player
-        player.update(dt, self)
+        if dt < 0.3: # Player can phase through walls if there's a spike in dt
+            player.update(dt, self)
+        self.timer = max(self.timer - dt, 0)
+
 
         

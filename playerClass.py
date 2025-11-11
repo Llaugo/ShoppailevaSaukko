@@ -42,7 +42,7 @@ class Player(Widget):
             self.y += dy * s # Prefer vertical movement
         elif dx: 
             self.x += dx * s # Move horizontally
-        self.walking = (self.walking + s/40.0) % 4
+        self.walking = (self.walking + s/60.0) % 4
         animationFrame = self.facing*4 + round(self.walking) % 4 # Get the correct image (frame of the animation)
         self.texture = self.sheet.getImage(animationFrame)
         self.resolveCollision(game.currentRoom)

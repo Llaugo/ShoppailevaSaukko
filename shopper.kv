@@ -410,5 +410,18 @@
         Player:
             id: player
             center: root.design_w/2, root.design_h/2+self.height/4
+        Image:
+            id: frame
+            source: "images/frame.png"
+            size: root.design_w, root.design_h
+            center: room.center
+            fit_mode: "contain"
+        Label:
+            id: timer
+            text: "{:02d}:{:02d}".format(int(root.timer//60),int(root.timer%60))
+            size_hint: None, None
+            font_size: dp(45)
+            center: dp(865), dp(955)
+            color: (0,0,0)
 
 
