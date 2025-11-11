@@ -1,4 +1,6 @@
 import csv
+from kivy.app import App
+
 
 def readLayout(file):
     # Reads a CSV containing one or more room layouts separated by empty rows.
@@ -22,6 +24,10 @@ def readLayout(file):
         if currentLayout:
             layouts.append(currentLayout)
     return layouts
+
+@property
+def tr():
+    return App.get_running_app().tr
 
 # Calculate the intersection of two widgets.
 # Return the intersection rectangle and None if no intersection.

@@ -55,6 +55,15 @@ rarityColor = [(255,255,140), (255,182,101), (67,255,255), (255,106,233), (255,2
 # Maximum room distance from the start (and index for the "best" item distibution)
 roomDistMax = len(itemRarity)-1
 
+# All the items that can appear in the shopping list and in the shop
+# The first list has the most common items and the last list has the least common items
+def shop():
+    return [[utils.tr("item.item1"), utils.tr("item.item2"),  utils.tr("item.item3"),  utils.tr("item.item4"),  utils.tr("item.item5")],
+            [utils.tr("item.item6"), utils.tr("item.item7"),  utils.tr("item.item8"),  utils.tr("item.item9"),  utils.tr("item.item10")],
+            [utils.tr("item.item11"),utils.tr("item.item12"), utils.tr("item.item13"), utils.tr("item.item14"), utils.tr("item.item15")],
+            [utils.tr("item.item16"),utils.tr("item.item17"), utils.tr("item.item18"), utils.tr("item.item19"), utils.tr("item.item20")],
+            [utils.tr("item.item21"),utils.tr("item.item22"), utils.tr("item.item23"), utils.tr("item.item24"), utils.tr("item.item25")],]
+
 '''
 The rooms are created randomly from a list of predetermined layouts. 
 One layout is a square of numbers, each number representing a type of tile.
@@ -220,11 +229,3 @@ phrase = [
 ["HISSEN",
      ""]]
 
-# All the items that can appear in the shopping list and in the shop
-# The first list has the most common items and the last list has the least common items
-def shop(lang):
-    return [[phrase[lang][21], phrase[lang][22], phrase[lang][23], phrase[lang][24], phrase[lang][25]],
-            [phrase[lang][26], phrase[lang][27], phrase[lang][28], phrase[lang][29], phrase[lang][30]],
-            [phrase[lang][31], phrase[lang][32], phrase[lang][33], phrase[lang][34], phrase[lang][35]],
-            [phrase[lang][36], phrase[lang][37], phrase[lang][38], phrase[lang][39], phrase[lang][40]],
-            [phrase[lang][41], phrase[lang][42], phrase[lang][43], phrase[lang][44], phrase[lang][45]]]
