@@ -20,7 +20,7 @@ playerDimensions = (36, 41)
 playerPadding = 12
 
 # Floor constants
-floorTime = 3     # How much time (sec) there is in each level (300 = 5min)
+floorTime = 300     # How much time (sec) there is in each level (300 = 5min)
 floorTimeMin = 297  # How much time has to be spent on a level before exit is possible
 floorSize = 9       # Floor size (floorSize x floorSize rooms)
 
@@ -33,7 +33,7 @@ cardExp = 0.1       # Amount of experience gained when using a card
 maxCardLevel = 3    # Maximum level that a strength card can get to
 
 # Probability constants
-itemProbability = 0.05 # Probability that a shelf tile has an item on it
+itemProbability = 0.5 # Probability that a shelf tile has an item on it
 darknessProbability = 0.15 # Probability that a room is dark
 crateProbability = 0.66 # Probability that a crate spawns
 

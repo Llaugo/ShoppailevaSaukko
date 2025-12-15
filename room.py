@@ -21,8 +21,13 @@ class Room(FloatLayout):
         self.waters = []                        # watertiles in the room
         self.adverts = []                       # adverts in the room
 
-    def on_kv_post(self, _):
-        pass
+    #def on_kv_post(self, _):
+    #    pass
+
+    def update(self, dt, player):
+        for row in self.layout:
+            for tile in row:
+                tile.update(dt)
 
     def setRoom(self, layout):
         org_layout = layout

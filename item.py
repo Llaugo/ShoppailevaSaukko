@@ -1,4 +1,5 @@
 from kivy.uix.widget import Widget
+from kivy.properties import ObjectProperty
 
 
 import const
@@ -6,12 +7,14 @@ from spriteSheet import SpriteSheet
 import random
 
 class Item(Widget):
+    texture = ObjectProperty(None)
+
     # roomDistance: How far away the room/item is from the middle. Far away rooms produce more rarer items.
     def __init__(self, roomDistance=0):
         self.picType = random.randint(0,3)*4 # Randomize item image
         self.shinePhase = 0 # Goes from 0 to 4 (Animation helper)
-        self.sheet = SpriteSheet('images/item_sheet.png')
-        self.texture = self.sheet.getImage(self.picType, (35,35))
+        self.sheet = SpriteSheet('images/item_sheet.png', (35,35))
+        self.texture = self.sheet.getImage(self.picType)
         self.corner = (random.choice([-1,1]),random.choice([-1,1]))
         self.rarityLevel = -1
         self.name = "DefaultName"
@@ -22,11 +25,11 @@ class Item(Widget):
         self.rarityLevel = newRarity
 
     # update item animated shine effect
-    def update(self):
+    def update(self, dt):
         oldShine = round(self.shinePhase)
-        self.shinePhase += 0.1
+        self.shinePhase += 0.05
         if oldShine != round(self.shinePhase):
-            self.texture = self.sheet.getImage(self.picType + (round(self.shinePhase) % 4) (35,35))
+            self.texture = self.sheet.getImage(self.picType + (round(self.shinePhase) % 4))
 
     # Set the name/type of the item randomly
     def randomizeItem(self, roomDistance):

@@ -25,9 +25,8 @@ def readLayout(file):
             layouts.append(currentLayout)
     return layouts
 
-@property
-def tr():
-    return App.get_running_app().tr
+def tr(key: str):
+    return App.get_running_app().tr(key)
 
 # Calculate the intersection of two widgets.
 # Return the intersection rectangle and None if no intersection.

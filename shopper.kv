@@ -371,11 +371,19 @@
 <Tile>:
     canvas:
         Color: 
-            rgba: 1, 1, 1, 1      # neutral (no tint)
+            rgba: 1, 1, 1, 1
         Rectangle:
             pos: self.pos
             size: self.size
             texture: root.texture
+    # 2) Item overlay — only if item exists
+    canvas.after:
+        Color: 
+            rgba: 1, 1, 1, 1 if root.item else 0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            texture: root.item.texture if root.item else None
 # Rooms
 <Room>:
     GridLayout:
@@ -389,7 +397,7 @@
         row_default_height: dp(46)
         col_default_width:  dp(46)
 
-# The game
+# The game view
 <ShopperGame>:
     canvas:
         Color: 
@@ -405,6 +413,10 @@
         id: world
         size: root.design_w, root.design_h
         center: bg.center
+        do_translation: False
+        do_scale: False
+        do_rotation: False
+        transform_with_touch: False
         Room:
             id: room
         Player:

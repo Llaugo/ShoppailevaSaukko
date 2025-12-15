@@ -9,6 +9,7 @@ import random
 class Tile(Widget):
     texture = ObjectProperty(None)  # holds a Texture
     tileType = NumericProperty(0)
+    item = ObjectProperty(allownone=True, rebind=True)
 
     def __init__(self, tileType, roomDistance=0, **kwargs):
         super().__init__(**kwargs)
@@ -16,8 +17,18 @@ class Tile(Widget):
         self.roomDistance = roomDistance
         self.sheet = SpriteSheet("images/shopsprite.png", (46, 46))
         self.texture = self.sheet.getImage(self.tileType)
+        self.texture.mag_filter = 'nearest'
+        self.texture.min_filter = 'nearest'
         if self.isShelf() and const.itemProbability > random.random(): # Randomize if a shelf tile has an item or not
             self.addItem(self.roomDistance)
+
+    def on_kv_post(self, _):
+        #self.item = self.ids.item
+        pass
+
+    def update(self, dt):
+        if self.item:
+            self.item.update(dt)
 
     # Adds an item to this tile if it is a shelf and the item isn't set already
     def addItem(self, roomDistance):

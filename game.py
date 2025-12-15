@@ -48,6 +48,7 @@ class ShopperGame(Widget):
         player = self.ids.player
         if dt < 0.3: # Player can phase through walls if there's a spike in dt
             player.update(dt, self)
+            self.currentRoom.update(dt, player)
         self.timer = max(self.timer - dt, 0)
 
 
