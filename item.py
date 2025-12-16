@@ -10,12 +10,13 @@ class Item(Widget):
     texture = ObjectProperty(None)
 
     # roomDistance: How far away the room/item is from the middle. Far away rooms produce more rarer items.
-    def __init__(self, roomDistance=0):
+    def __init__(self, roomDistance=0, **kwargs):
+        super().__init__(**kwargs)
         self.picType = random.randint(0,3)*4 # Randomize item image
         self.shinePhase = 0 # Goes from 0 to 4 (Animation helper)
         self.sheet = SpriteSheet('images/item_sheet.png', (35,35))
         self.texture = self.sheet.getImage(self.picType)
-        self.corner = (random.choice([-1,1]),random.choice([-1,1]))
+        self.corner = (random.choice([-1,1]), random.choice([-1,1]))
         self.rarityLevel = -1
         self.name = "DefaultName"
         self.randomizeItem(roomDistance) # Determine item name/type

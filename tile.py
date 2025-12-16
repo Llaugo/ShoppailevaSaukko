@@ -17,8 +17,6 @@ class Tile(Widget):
         self.roomDistance = roomDistance
         self.sheet = SpriteSheet("images/shopsprite.png", (46, 46))
         self.texture = self.sheet.getImage(self.tileType)
-        self.texture.mag_filter = 'nearest'
-        self.texture.min_filter = 'nearest'
         if self.isShelf() and const.itemProbability > random.random(): # Randomize if a shelf tile has an item or not
             self.addItem(self.roomDistance)
 
@@ -33,7 +31,16 @@ class Tile(Widget):
     # Adds an item to this tile if it is a shelf and the item isn't set already
     def addItem(self, roomDistance):
         if self.isShelf() and not self.item:
-            self.item = item.Item(roomDistance)
+            newItem = item.Item(roomDistance)
+            self.bind(size=lambda *_: setattr(newItem, "size", self.size))
+            self.bind(pos=lambda *_: setattr(newItem, "pos", (self.pos[0] + 20*newItem.corner[0], self.pos[1] + 20*newItem.corner[1])))
+            self.add_widget(newItem)
+            self.item = newItem
+
+    def removeItem(self):
+        if self.item:
+            self.remove_widget(self.item)
+            self.item = None
 
     # Returns True if this tile is a shelf tile and False otherwise
     def isShelf(self):

@@ -12,6 +12,7 @@ class Room(FloatLayout):
         super().__init__(**kwargs)
         self.layout = None # Each tile in a grid
         self.exit = None
+        self.items = []                         # items in the room
         self.carts = []                         # carts in the room
         self.npcs = []                          # npcs in the room
         self.npcCartPairs = []                  # pairs of npcs and carts
@@ -28,6 +29,14 @@ class Room(FloatLayout):
         for row in self.layout:
             for tile in row:
                 tile.update(dt)
+
+    def removeItem(self, item):
+        for row in self.layout:
+            for tile in row:
+                if tile.item == item:
+                    tile.removeItem()
+                    break
+        self.items.remove(item)
 
     def setRoom(self, layout):
         org_layout = layout
@@ -54,6 +63,8 @@ class Room(FloatLayout):
                             tile = Tile(random.randint(1,3))
                 elif c == 2: # Shelf
                     tile = Tile(random.randint(10,18)) # + self.roomDistance
+                    if tile.item:
+                        self.items.append(tile.item)
                     self.shelves.append(tile)
                 elif c == 3: # Exit
                     tile = Tile(0)

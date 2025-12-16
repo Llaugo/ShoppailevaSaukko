@@ -376,14 +376,18 @@
             pos: self.pos
             size: self.size
             texture: root.texture
-    # 2) Item overlay — only if item exists
-    canvas.after:
+
+# Items
+<Item>:
+    size_hint: None, None
+    canvas:
         Color: 
-            rgba: 1, 1, 1, 1 if root.item else 0
+            rgba: 1,1,1,1
         Rectangle:
             pos: self.pos
             size: self.size
-            texture: root.item.texture if root.item else None
+            texture: root.texture
+
 # Rooms
 <Room>:
     GridLayout:
@@ -422,12 +426,28 @@
         Player:
             id: player
             center: root.design_w/2, root.design_h/2+self.height/4
+        # Item button
+        Button:
+            id: itemButton
+            color: (0,0,0,1)
+            font_size: 44
+            text: app.tr("game.item_button")
+            border: 0,0,0,0
+            size_hint: None, None
+            size: dp(100), dp(100)
+            disabled: self.opacity == 0
+            #pos_hint: {"left": 0.01, "top": 0.99}
+            background_normal: "images/buttons/itembutton0.png"
+            background_down:  "images/buttons/itembutton1.png"
+            on_release: root.pickUpItem()
+        # Room frame image
         Image:
             id: frame
             source: "images/frame.png"
             size: root.design_w, root.design_h
             center: room.center
             fit_mode: "contain"
+        # Timer
         Label:
             id: timer
             text: "{:02d}:{:02d}".format(int(root.timer//60),int(root.timer%60))

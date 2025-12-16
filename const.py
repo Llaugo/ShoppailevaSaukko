@@ -29,11 +29,11 @@ npcWalkDur = 93     # Walking distances
 npcWalkSpeed = 1    # Walking speed
 
 # Card constants
-cardExp = 0.1       # Amount of experience gained when using a card
+cardExp = 0.5       # Amount of experience gained when using a card
 maxCardLevel = 3    # Maximum level that a strength card can get to
 
 # Probability constants
-itemProbability = 0.5 # Probability that a shelf tile has an item on it
+itemProbability = 0.2 # Probability that a shelf tile has an item on it (0.05)
 darknessProbability = 0.15 # Probability that a room is dark
 crateProbability = 0.66 # Probability that a crate spawns
 

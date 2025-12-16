@@ -49,7 +49,19 @@ class ShopperGame(Widget):
         if dt < 0.3: # Player can phase through walls if there's a spike in dt
             player.update(dt, self)
             self.currentRoom.update(dt, player)
+            onItem = 0
+            for i, item in enumerate(self.currentRoom.items):
+                if player.collide_widget(item):
+                    onItem = 1
+                    break
+            self.ids.itemButton.opacity = onItem
         self.timer = max(self.timer - dt, 0)
+
+    def pickUpItem(self):
+        for item in self.currentRoom.items:
+            if self.ids.player.collide_widget(item):
+                self.currentRoom.removeItem(item)
+                break
 
 
         
