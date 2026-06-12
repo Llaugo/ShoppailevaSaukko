@@ -16,10 +16,10 @@ class Item(Widget):
         self.shinePhase = 0 # Goes from 0 to 4 (Animation helper)
         self.sheet = SpriteSheet('images/item_sheet.png', (35,35))
         self.texture = self.sheet.getImage(self.picType)
-        self.corner = (random.choice([-1,1]), random.choice([-1,1]))
-        self.rarityLevel = -1
-        self.name = "DefaultName"
-        self.randomizeItem(roomDistance) # Determine item name/type
+        self.corner = (random.choice([-1,1]), random.choice([-1,1])) # Randomize item location on tile
+        self.rarityLevel = -1 # {0,1,2,3,4} (4 = rarest)
+        self.name = "DefaultName" # Name of the item
+        self.randomizeItem(roomDistance)
 
     def setName(self, newName, newRarity):
         self.name = newName
@@ -37,8 +37,7 @@ class Item(Widget):
         randomFloat = random.random()
         for i in range(len(const.itemRarity[roomDistance])): # Get item rarities according to the room distance
             if randomFloat <= const.itemRarity[roomDistance][i]: # Compare rarity list to the random float
-                self.rarityLevel = i
-                self.name = const.shop()[i][random.randint(0,4)]
+                self.setName(const.shop()[i][random.randint(0,4)], i)
                 return
         raise ValueError('Could not determine item based on rarity level.')
         

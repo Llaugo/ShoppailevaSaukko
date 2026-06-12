@@ -1,5 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty, NumericProperty
+from kivy.metrics import dp
 
 from spriteSheet import SpriteSheet
 import item
@@ -32,11 +33,13 @@ class Tile(Widget):
     def addItem(self, roomDistance):
         if self.isShelf() and not self.item:
             newItem = item.Item(roomDistance)
-            self.bind(size=lambda *_: setattr(newItem, "size", self.size))
-            self.bind(pos=lambda *_: setattr(newItem, "pos", (self.pos[0] + 20*newItem.corner[0], self.pos[1] + 20*newItem.corner[1])))
+            # Bind item size and pos to tile size and pos to change reflexively with tile
+            self.bind(size=lambda *_: setattr(newItem, "size", (self.size[0]*0.76,self.size[1]*0.76)))
+            self.bind(pos=lambda *_: setattr(newItem, "pos", (self.pos[0] + dp(8) + 10*dp(newItem.corner[0]), self.pos[1] + dp(8) + 10*dp(newItem.corner[1]))))
             self.add_widget(newItem)
             self.item = newItem
 
+    # Delete any item on tile
     def removeItem(self):
         if self.item:
             self.remove_widget(self.item)
