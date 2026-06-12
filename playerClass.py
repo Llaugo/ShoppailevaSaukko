@@ -8,7 +8,7 @@ import room
 
 class Player(Widget):
     texture = ObjectProperty(None)  # holds a Texture
-    speed  = NumericProperty(const.basePlayerSpeed)
+    speed  = NumericProperty(const.basePlayerSpeed) # player walking speed
     vis_pad = NumericProperty(const.playerPadding)
 
     def __init__(self, **kwargs):
@@ -19,10 +19,12 @@ class Player(Widget):
         self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
         self.flyDuration = 0
 
+    # Update player
+    # Track movement and change image
     def update(self, dt, game):
         keys = game.pressed
-        dx = 0
-        dy = 0
+        dx = 0 # horizontal momentum
+        dy = 0 # vertical momentum
         if ord('s') in keys: # Down key or button
             self.facing = 0
             dy -= 1
@@ -47,23 +49,17 @@ class Player(Widget):
         self.texture = self.sheet.getImage(animationFrame)
         self.resolveCollision(game.currentRoom)
 
+    # Resolve possible collision with the world/room
+    # Returns true if collision happened
     def resolveCollision(self, room: room.Room, preferDir=None):
-        solids = room.walls.copy()
-        solids += room.shelves.copy()
-        #if self.flyDuration > 1:
-        #    solids = room.wallRects.copy()
-        #else:
-        #    solids = room.solidRects.copy()
-        #    if not self.swimDuration:
-        #        solids += room.waterRects
-        #    if not self.npcCollDuration:
-        #        for npc in room.npcs:
-        #            solids.append(npc.rect)
+        solids = room.walls.copy() # Add walls to solid objects
+        solids += room.shelves.copy() # Add shelves to solid objects
         collided = False
-        for solid in solids:                                # Check all the solid rects in the room
-            if self.collide_widget(solid):
+        for solid in solids:                                # Check all the solid objects in the room
+            if self.collide_widget(solid): # Check collision
                 overlap = utils.intersect_rects(self, solid)             # Compute overlap rectangle
                 if overlap: 
+                    # Push the player out of the solid object towards the closest way out
                     if preferDir == "x" or (overlap[2] < overlap[3] and preferDir != "y"): # Choose the smaller overlap dimension if there is no preferation
                         if self.center_x > overlap[0]+overlap[2]/2:   # Player is on right side of tile -> push right
                             #self.x = solid.right

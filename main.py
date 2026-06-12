@@ -49,6 +49,7 @@ class ShopperApp(App):
     def build(self):
         self.setLanguage(self.lang)
         sm = ScreenManager(transition=NoTransition())
+        # Add all possible screens/views to app
         sm.add_widget(MenuScreen(name='menu'))
         sm.add_widget(strengthMenu.StrengthMenu(name='strengths'))
         sm.add_widget(SettingsScreen(name='settings'))
@@ -56,6 +57,7 @@ class ShopperApp(App):
         sm.add_widget(GameScreen(name='game'))
         return sm
     
+    # Select language from i18n
     def setLanguage(self, newLang):
         path = os.path.join("i18n", f"{newLang}.json")
         with open(path, "r", encoding="utf-8") as file:
