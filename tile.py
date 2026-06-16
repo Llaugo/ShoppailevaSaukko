@@ -7,6 +7,7 @@ import item
 import const
 import random
 
+# Tile class hold info on each individual tile on the game board
 class Tile(Widget):
     texture = ObjectProperty(None)  # holds a Texture
     tileType = NumericProperty(0)
@@ -25,18 +26,19 @@ class Tile(Widget):
         #self.item = self.ids.item
         pass
 
+    # Update tile and its item
     def update(self, dt):
         if self.item:
             self.item.update(dt)
 
-    # Adds an item to this tile if it is a shelf and the item isn't set already
+    # Adds an item to tile
     def addItem(self, roomDistance):
-        if self.isShelf() and not self.item:
-            newItem = item.Item(roomDistance)
+        if self.isShelf() and not self.item: # If it's a shelf and the item isn't set already
+            newItem = item.Item(roomDistance) # Generate new item
             # Bind item size and pos to tile size and pos to change reflexively with tile
             self.bind(size=lambda *_: setattr(newItem, "size", (self.size[0]*0.76,self.size[1]*0.76)))
             self.bind(pos=lambda *_: setattr(newItem, "pos", (self.pos[0] + dp(8) + 10*dp(newItem.corner[0]), self.pos[1] + dp(8) + 10*dp(newItem.corner[1]))))
-            self.add_widget(newItem)
+            self.add_widget(newItem) # Add item image on top of tile
             self.item = newItem
 
     # Delete any item on tile
@@ -52,18 +54,21 @@ class Tile(Widget):
         else:
             return False
         
+    # Returns True if this tile is a water tile and False otherwise
     def isWater(self):
         if self.tileType == 20:
             return True
         else:
             return False
         
+    # Returns True if this tile is a wall tile and False otherwise
     def isWall(self):
         if self.tileType == 9:
             return True
         else:
             return False
         
+    # Returns True if this tile is an advert tile and False otherwise
     def isAdvert(self):
         if self.tileType == 7:
             return True

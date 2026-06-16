@@ -68,4 +68,5 @@ class ShopperGame(Widget):
                 break
 
 
-        
+    def nextRoom(self, dir, player):
+        pass

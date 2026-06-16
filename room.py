@@ -25,27 +25,30 @@ class Room(FloatLayout):
     #def on_kv_post(self, _):
     #    pass
 
+    # update everything in the room
     def update(self, dt, player):
         for row in self.layout:
             for tile in row:
                 tile.update(dt)
 
+    # Remove the given item from the room
     def removeItem(self, item):
         for row in self.layout:
             for tile in row:
                 if tile.item == item:
-                    tile.removeItem()
+                    tile.removeItem() # Remove from the tile
                     break
-        self.items.remove(item)
+        self.items.remove(item) # Remove from the item list
 
+    # Initialize the room from the given layout
     def setRoom(self, layout):
         org_layout = layout
         g = self.ids.grid
-        g.clear_widgets()
-        self.layout = [[None]*len(org_layout[0]) for _ in range(len(org_layout))]
+        g.clear_widgets() # Clear possible old layout
+        self.layout = [[None]*len(org_layout[0]) for _ in range(len(org_layout))] # Init with None
         g.cols = len(org_layout[0])
-        lift = len(org_layout) <= 5
-        for i, row in enumerate(org_layout):
+        lift = len(org_layout) <= 5 # boolean value states if room is a lift (lifts are smaller rooms)
+        for i, row in enumerate(org_layout): # Decode every tile
             for j, c in enumerate(row):
                 if c == 0: # Wall
                     if lift: # Lift has special walls
