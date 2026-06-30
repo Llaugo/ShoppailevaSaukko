@@ -369,6 +369,7 @@
 
 # Tiles
 <Tile>:
+    size_hint: None, None
     canvas:
         Color: 
             rgba: 1, 1, 1, 1
@@ -390,19 +391,35 @@
 
 # Rooms
 <Room>:
+    size_hint: None, None
     GridLayout:
         id: grid
-        cols: 1
         size_hint: None, None
-        size: self.minimum_size
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+        size: root.size
+        pos: root.pos
+        cols: 1
         row_force_default: True
         col_force_default: True
-        row_default_height: dp(46)
-        col_default_width:  dp(46)
+        row_default_height: root.tileSize
+        col_default_width:  root.tileSize
+
+
+# Door debug hitbox
+<Door>:
+    size_hint: None, None
+
+    # temporary debug drawing
+#    canvas:
+#        Color:
+#            rgba: 1, 0, 0, 0.4
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+
 
 # The game view
 <ShopperGame>:
+    size_hint: 1,1
     canvas:
         Color: 
             rgba: 0.627,0.8820,1,1
@@ -413,8 +430,10 @@
         id: bg
         source: "images/game_background.png"
         size: root.size
+
     ScatterLayout:
         id: world
+        size_hint: None, None
         size: root.design_w, root.design_h
         center: bg.center
         do_translation: False
@@ -425,7 +444,7 @@
             id: room
         Player:
             id: player
-            center: root.design_w/2, root.design_h/2+self.height/4
+            center: world.width/2, world.height/2 + self.height/4
         # Item button
         Button:
             id: itemButton
@@ -434,7 +453,7 @@
             text: app.tr("game.item_button")
             border: 0,0,0,0
             size_hint: None, None
-            size: dp(100), dp(100)
+            size: 100, 100
             disabled: self.opacity == 0
             #pos_hint: {"left": 0.01, "top": 0.99}
             background_normal: "images/buttons/itembutton0.png"
@@ -452,8 +471,8 @@
             id: timer
             text: "{:02d}:{:02d}".format(int(root.timer//60),int(root.timer%60))
             size_hint: None, None
-            font_size: dp(45)
-            center: dp(865), dp(955)
+            font_size: 88
+            center: 1728, 1912
             color: (0,0,0)
 
 

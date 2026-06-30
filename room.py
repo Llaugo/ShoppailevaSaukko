@@ -3,6 +3,7 @@ from kivy.properties import NumericProperty
 
 import random
 from tile import Tile
+from door import Door
 import const
 
 class Room(FloatLayout):
@@ -10,7 +11,7 @@ class Room(FloatLayout):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.layout = None # Each tile in a grid
+        self.layout = None # Each tile object in a grid
         self.exit = None
         self.items = []                         # items in the room
         self.carts = []                         # carts in the room
@@ -41,12 +42,20 @@ class Room(FloatLayout):
         self.items.remove(item) # Remove from the item list
 
     # Initialize the room from the given layout
-    def setRoom(self, layout):
+    def setRoom(self, layout, roomDist=0):
         org_layout = layout
         g = self.ids.grid
         g.clear_widgets() # Clear possible old layout
-        self.layout = [[None]*len(org_layout[0]) for _ in range(len(org_layout))] # Init with None
-        g.cols = len(org_layout[0])
+        rows = len(org_layout)
+        cols = len(org_layout[0]) if rows else 0
+        self.layout = [[None]*cols for _ in range(rows)] # Init with None
+        g.cols = cols
+        g.col_default_width = self.tileSize
+        g.row_default_height = self.tileSize
+        g.size = (cols*self.tileSize, rows*self.tileSize)
+        self.size = g.size
+        #g.pos = (0,0)
+
         lift = len(org_layout) <= 5 # boolean value states if room is a lift (lifts are smaller rooms)
         for i, row in enumerate(org_layout): # Decode every tile
             for j, c in enumerate(row):
@@ -60,7 +69,7 @@ class Room(FloatLayout):
                     if lift: # Lift has special floor
                         tile = Tile(4)
                     else:
-                        if i == 0 or j == 0 or i == len(layout)-1 or j == len(layout)-1:
+                        if i == 0 or j == 0 or i == len(layout)-1 or j == len(layout)-1: # doorway
                             tile = Tile(8)
                         else:
                             tile = Tile(random.randint(1,3))
@@ -93,5 +102,7 @@ class Room(FloatLayout):
                     tile = Tile(4)
                 else:
                     raise ValueError(f'The room layout contains unknown value: {c}')
+                tile.size_hint = (None, None)
+                tile.size = (self.tileSize, self.tileSize)
                 g.add_widget(tile)
                 self.layout[i][j] = tile

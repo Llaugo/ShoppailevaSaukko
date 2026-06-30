@@ -22,7 +22,7 @@ playerPadding = 12
 # Floor constants
 floorTime = 300     # How much time (sec) there is in each level (300 = 5min)
 floorTimeMin = 297  # How much time has to be spent on a level before exit is possible
-floorSize = 9       # Floor size (floorSize x floorSize rooms)
+floorSize = 9       # Floor layout (floorSize x floorSize rooms)
 
 # Npc constants
 npcWalkDur = 93     # Walking distances

@@ -76,6 +76,8 @@ class Player(Widget):
                             self.top = max(self.top - math.ceil(self.height/2), solid.y)
                     collided = True
         return collided
+    
+
             
 
     '''

@@ -3,7 +3,7 @@ from kivy.properties import ObjectProperty, NumericProperty
 from kivy.metrics import dp
 
 from spriteSheet import SpriteSheet
-import item
+from item import Item
 import const
 import random
 
@@ -34,7 +34,7 @@ class Tile(Widget):
     # Adds an item to tile
     def addItem(self, roomDistance):
         if self.isShelf() and not self.item: # If it's a shelf and the item isn't set already
-            newItem = item.Item(roomDistance) # Generate new item
+            newItem = Item(roomDistance) # Generate new item
             # Bind item size and pos to tile size and pos to change reflexively with tile
             self.bind(size=lambda *_: setattr(newItem, "size", (self.size[0]*0.76,self.size[1]*0.76)))
             self.bind(pos=lambda *_: setattr(newItem, "pos", (self.pos[0] + dp(8) + 10*dp(newItem.corner[0]), self.pos[1] + dp(8) + 10*dp(newItem.corner[1]))))
@@ -74,3 +74,11 @@ class Tile(Widget):
             return True
         else:
             return False
+        
+    """
+    def isDoor(self):
+        if self.tileType == 21:
+            return True
+        else:
+            return False
+    """
