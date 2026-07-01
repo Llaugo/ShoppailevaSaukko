@@ -17,6 +17,8 @@ class Tile(Widget):
         super().__init__(**kwargs)
         self.tileType = tileType
         self.roomDistance = roomDistance
+        self.solid = True  # Is the tile solid (player collides)
+        if tileType < 9: self.solid = False # The first eight tile types are not solid and can be walked on
         self.sheet = SpriteSheet("images/shopsprite.png", (46, 46))
         self.texture = self.sheet.getImage(self.tileType)
         if self.isShelf() and const.itemProbability > random.random(): # Randomize if a shelf tile has an item or not
@@ -30,6 +32,9 @@ class Tile(Widget):
     def update(self, dt):
         if self.item:
             self.item.update(dt)
+
+    def updateImage(self):
+        self.texture = self.sheet.getImage(self.tileType)
 
     # Adds an item to tile
     def addItem(self, roomDistance):
@@ -46,6 +51,12 @@ class Tile(Widget):
         if self.item:
             self.remove_widget(self.item)
             self.item = None
+
+    # Make this tile a wall
+    def makeWall(self):
+        self.tileType = 9
+        self.solid = True
+        self.updateImage()
 
     # Returns True if this tile is a shelf tile and False otherwise
     def isShelf(self):

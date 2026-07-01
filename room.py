@@ -106,3 +106,17 @@ class Room(FloatLayout):
                 tile.size = (self.tileSize, self.tileSize)
                 g.add_widget(tile)
                 self.layout[i][j] = tile
+
+    # Remove one entrence and make it wall
+    # dir: (down=0,right=1,up=2,left=3)
+    def removeDoor(self, dir: int):
+        if dir == 0:
+            tile = self.layout[(len(self.layout)//2)][0]
+        elif dir == 1:
+            tile = self.layout[0][(len(self.layout)//2)]
+        elif dir == 2:
+            tile = self.layout[(len(self.layout)//2)][len(self.layout)-1]
+        elif dir == 3:
+            tile = self.layout[len(self.layout)-1][(len(self.layout)//2)]
+        tile.makeWall()
+        self.walls.append(tile)

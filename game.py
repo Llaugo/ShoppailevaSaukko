@@ -29,7 +29,7 @@ class ShopperGame(Widget):
     def on_kv_post(self, _):
         self.currentRoom = self.ids.room # Set currentRoom parameter
         layout = const.testRoom
-        self.currentRoom.tileSize = const.worldHeigth/(const.floorSize*1.7)
+        self.currentRoom.tileSize = const.worldHeigth/const.roomSize*0.98
         self.currentRoom.setRoom(layout[0])
         self.centerRoom(self.currentRoom)
         self.rooms[self.half][self.half] = self.currentRoom
@@ -46,8 +46,8 @@ class ShopperGame(Widget):
         Clock.schedule_once(rescale, 0)
 
         grid = self.currentRoom.ids.grid # Grid of tiles
-        grid.col_default_width = const.worldHeigth/(const.floorSize*1.7)
-        grid.row_default_height = const.worldHeigth/(const.floorSize*1.7)
+        grid.col_default_width = const.worldHeigth/const.roomSize*0.98
+        grid.row_default_height = const.worldHeigth/const.roomSize*0.98
         player = self.ids.player
         player.size = (player.width*0.8, player.height*0.8) # Set player size
         # Set doors
@@ -62,9 +62,9 @@ class ShopperGame(Widget):
         grid = self.currentRoom.ids.grid # Grid of tiles
         gx, gy = grid.pos
         gw, gh = grid.size
-        door_size = gh/const.floorSize*0.7
-        north = Door(direction="north", size=(door_size, door_size), pos=(gx + gw/2 - door_size/2, gy + gh))
-        south = Door(direction="south", size=(door_size, door_size), pos=(gx + gw/2 - door_size/2, gy - door_size))
+        door_size = gh/const.roomSize
+        north = Door(direction="north", size=(door_size, door_size), pos=(gx + gw/2 - door_size/2, gy + gh - 10))
+        south = Door(direction="south", size=(door_size, door_size), pos=(gx + gw/2 - door_size/2, gy - door_size - 10))
         east = Door(direction="east", size=(door_size, door_size), pos=(gx + gw, gy + gh/2 - door_size/2))
         west = Door(direction="west", size=(door_size, door_size), pos=(gx - door_size, gy + gh/2 - door_size/2))
         for i, d in enumerate((south, east, north, west)):
@@ -154,7 +154,7 @@ class ShopperGame(Widget):
         # Create a new one
         distFromMiddle = abs(x - self.half) + abs(y - self.half)
         newRoom = Room()
-        newRoom.tileSize = const.worldHeigth/(const.floorSize*1.7)
+        newRoom.tileSize = const.worldHeigth/const.roomSize*0.98
         newRoom.setRoom(random.choice(const.roomLayouts), distFromMiddle)
         self.centerRoom(newRoom)
         # Delete doors leading outside the floor limits

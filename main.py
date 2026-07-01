@@ -56,7 +56,7 @@ class ShopperApp(App):
         sm.add_widget(QuestionScreen(name='?'))
         sm.add_widget(GameScreen(name='game'))
         return sm
-    
+   
     # Select language from i18n
     def setLanguage(self, newLang):
         path = os.path.join("i18n", f"{newLang}.json")

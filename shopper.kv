@@ -453,9 +453,9 @@
             text: app.tr("game.item_button")
             border: 0,0,0,0
             size_hint: None, None
-            size: 100, 100
+            size: 200, 200
             disabled: self.opacity == 0
-            #pos_hint: {"left": 0.01, "top": 0.99}
+            pos_hint: {"left": 0.05, "top": 0.98}
             background_normal: "images/buttons/itembutton0.png"
             background_down:  "images/buttons/itembutton1.png"
             on_release: root.pickUpItem()
