@@ -449,22 +449,36 @@
         Button:
             id: itemButton
             color: (0,0,0,1)
-            font_size: 44
+            font_size: 60
             text: app.tr("game.item_button")
             border: 0,0,0,0
             size_hint: None, None
-            size: 200, 200
+            size: 300, 300
+            pos: 3350, 845
             disabled: self.opacity == 0
-            pos_hint: {"left": 0.05, "top": 0.98}
             background_normal: "images/buttons/itembutton0.png"
             background_down:  "images/buttons/itembutton1.png"
             on_release: root.pickUpItem()
+        # Floor changing button
+        Button:
+            id: liftButton
+            color: (0,0,0,1)
+            font_size: 56
+            text: app.tr("game.lift_button")
+            border: 0,0,0,0
+            size_hint: None, None
+            size: 300, 300
+            pos: 3050, 845
+            disabled: self.opacity == 0
+            background_normal: "images/buttons/itembutton0.png"
+            background_down:  "images/buttons/itembutton1.png"
+            on_release: root.escapeFloor()
         # Room frame image
         Image:
             id: frame
             source: "images/frame.png"
             size: root.design_w, root.design_h
-            center: room.center
+            center: (world.width/2, world.height/2)
             fit_mode: "contain"
         # Timer
         Label:
@@ -474,5 +488,20 @@
             font_size: 88
             center: 1728, 1912
             color: (0,0,0)
+        # Next floor button
+        Button:
+            id: nextFloorButton
+            color: (0,0,0,1)
+            font_size: 90
+            text: app.tr("game.floor_button")
+            border: 0,0,0,0
+            size_hint: None, None
+            size:  900, 225
+            center: (world.width/2, 400)
+            disabled: self.opacity == 0
+            opacity: 0
+            background_normal: "images/buttons/longbutton0.png"
+            background_down:  "images/buttons/longbutton1.png"
+            on_release: root.nextFloor()
 
 

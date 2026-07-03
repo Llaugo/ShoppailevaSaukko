@@ -70,5 +70,7 @@
     "item.item23": "Sahrami",
     "item.item24": "Murot",
     "item.item25": "Runebergin torttu",
-    "game.item_button": "Poimi\nesine"
+    "game.item_button": "Poimi\nesine",
+    "game.lift_button": "Hissiin",
+    "game.floor_button": "Seuraava kerros"
 }

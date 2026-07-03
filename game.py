@@ -21,19 +21,16 @@ class ShopperGame(Widget):
         self.pressed = set() # All pressed buttons show up in here
         Window.bind(on_key_down=self.on_key_down, on_key_up=self.on_key_up)
         # Initialize floor room list
-        self.rooms: list[list[Room]] = [[None]*const.floorSize for _ in range(const.floorSize)]
+        self.rooms: list[list[Room]]
         self.half = const.floorSize // 2
-        self.currentLocation = (self.half,self.half) # Player's current room coords (start from the middle)
+        self.currentLocation: tuple[int, int] # Player's current room coords (start from the middle)
         self.doors = [None, None, None, None] # door widgets, s,e,n,w
+        self.gameActive = False # True if playing a floor
+        self.floorNumber = 0 # Current floor
 
     def on_kv_post(self, _):
         self.currentRoom = self.ids.room # Set currentRoom parameter
-        layout = const.testRoom
-        self.currentRoom.tileSize = const.worldHeigth/const.roomSize*0.98
-        self.currentRoom.setRoom(layout[0])
-        self.centerRoom(self.currentRoom)
-        self.rooms[self.half][self.half] = self.currentRoom
-
+        # Reflexive scaling
         bg = self.ids.bg # Background element
         def rescale(*_):
             if not bg.texture:
@@ -44,14 +41,11 @@ class ShopperGame(Widget):
             self.ids.world.center = bg.center
         self.bind(size=rescale) # Resize/rescale everything reflexively
         Clock.schedule_once(rescale, 0)
-
-        grid = self.currentRoom.ids.grid # Grid of tiles
-        grid.col_default_width = const.worldHeigth/const.roomSize*0.98
-        grid.row_default_height = const.worldHeigth/const.roomSize*0.98
+        # Player sizing
         player = self.ids.player
         player.size = (player.width*0.8, player.height*0.8) # Set player size
-        # Set doors
-        Clock.schedule_once(lambda dt: self.resetDoors(), 0)
+        self.resetFloor()
+        
 
     # Reset doors
     def resetDoors(self):
@@ -83,6 +77,11 @@ class ShopperGame(Widget):
         if dt < 0.3: # Player can phase through walls if there's a spike in dt
             player.update(dt, self) # update player
             self.currentRoom.update(dt, player) # update room
+            # Check if player is standing on the lift
+            if self.currentRoom.exit != None and player.collide_widget(self.currentRoom.exit):
+                self.ids.liftButton.opacity = 1 # Show floor exit button
+            else:
+                self.ids.liftButton.opacity = 0
             # Show itemButton if player collides with an item
             onItem = 0
             for i, item in enumerate(self.currentRoom.items):
@@ -127,6 +126,8 @@ class ShopperGame(Widget):
         elif dir == "west":
             self.currentLocation = (self.currentLocation[0] - 1, self.currentLocation[1])
             player.center = (player.center[0] + grid.width - player.width, player.center[1])
+        elif dir == "lift":
+            self.currentLocation = (-1, -1)
         else:
             raise ValueError(f'Cannot go to the next room in direction: {dir}')
         # Open new room view
@@ -141,21 +142,28 @@ class ShopperGame(Widget):
             world.add_widget(newRoom)
         self.currentRoom = newRoom
         Clock.schedule_once(lambda dt: self.centerRoom(self.currentRoom), 0)
-        Clock.schedule_once(lambda dt: self.resetDoors(), 0)
+        #Clock.schedule_once(lambda dt: self.resetDoors(), 0)
 
     def getRoom(self, pos):
         x,y = pos
+        lift = False
+        if pos == (-1,-1):
+            lift = True
         # Out of bounds
         if len(self.rooms) <= x or len(self.rooms[0]) <= y or x < 0 or y < 0:
-            return None
+            if not lift:
+                return None
         # Select existing room
-        if self.rooms[x][y]:
+        if not lift and self.rooms[x][y]:
             return self.rooms[x][y]
         # Create a new one
         distFromMiddle = abs(x - self.half) + abs(y - self.half)
         newRoom = Room()
         newRoom.tileSize = const.worldHeigth/const.roomSize*0.98
-        newRoom.setRoom(random.choice(const.roomLayouts), distFromMiddle)
+        if lift:
+            newRoom.setRoom(const.lobbyLayout[0])
+        else:
+            newRoom.setRoom(random.choice(const.roomLayouts), distFromMiddle)
         self.centerRoom(newRoom)
         # Delete doors leading outside the floor limits
         if x == 0:
@@ -166,12 +174,64 @@ class ShopperGame(Widget):
             newRoom.removeDoor(1)
         elif y == len(self.rooms)-1:
             newRoom.removeDoor(3)
-        self.rooms[x][y] = newRoom
+        if not lift:
+            self.rooms[x][y] = newRoom
         return newRoom
 
+    # Center room to world
     def centerRoom(self, room):
         room.size_hint = (None, None)
-        room.center = (
-            self.ids.world.width/2,
-            self.ids.world.height/2,
-        )
+        room.center = (self.ids.world.width/2, self.ids.world.height/2,)
+    
+    # Center player to world
+    def centerPlayer(self):
+        world = self.ids.world
+        player = self.ids.player
+        player.center = world.width/2, world.height/2 + player.height/4
+        player.facing = 0 # Look down
+
+    # End the current level and go to checkpoint/lift view
+    def escapeFloor(self):
+        self.gameActive = False
+        self.ids.frame.opacity = 0
+        self.ids.timer.opacity = 0
+        self.ids.nextFloorButton.opacity = 1
+        self.nextRoom("lift")
+
+    # Start the next floor/level
+    def nextFloor(self):
+        self.gameActive = True
+        self.floorNumber += 1
+        self.ids.frame.opacity = 1
+        self.ids.timer.opacity = 1
+        self.ids.nextFloorButton.opacity = 0
+        self.resetFloor()
+
+    # Clear current floor and create a new one
+    def resetFloor(self):
+        # Clear floor
+        self.rooms: list[list[Room]] = [[None]*const.floorSize for _ in range(const.floorSize)]
+        self.currentLocation = (self.half,self.half)
+        # Create new starting room
+        oldRoom = self.currentRoom
+        newRoom = Room()
+        newRoom.tileSize = const.worldHeigth/const.roomSize*0.98
+        layout = const.testRoom # Starting room of the floor
+        newRoom.setRoom(layout[0])
+        # Replace old widget
+        if oldRoom.parent:
+            parent = oldRoom.parent
+            idx = parent.children.index(oldRoom)
+            parent.remove_widget(oldRoom)
+            parent.add_widget(newRoom, index=idx)
+        self.currentRoom = newRoom
+        self.rooms[self.half][self.half] = newRoom
+        self.centerRoom(newRoom)
+        # set room dimensions
+        grid = self.currentRoom.ids.grid # Grid of tiles
+        grid.col_default_width = const.worldHeigth/const.roomSize*0.98
+        grid.row_default_height = const.worldHeigth/const.roomSize*0.98
+
+        self.centerPlayer()
+        # Set doors
+        Clock.schedule_once(lambda dt: self.resetDoors(), 0)

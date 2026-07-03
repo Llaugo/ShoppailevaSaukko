@@ -12,7 +12,7 @@ class Room(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.layout = None # Each tile object in a grid
-        self.exit = None
+        self.exit = None                        # Possible lift tile in the room
         self.items = []                         # items in the room
         self.carts = []                         # carts in the room
         self.npcs = []                          # npcs in the room
@@ -46,6 +46,7 @@ class Room(FloatLayout):
         org_layout = layout
         g = self.ids.grid
         g.clear_widgets() # Clear possible old layout
+        self.clearState()
         rows = len(org_layout)
         cols = len(org_layout[0]) if rows else 0
         self.layout = [[None]*cols for _ in range(rows)] # Init with None
@@ -107,6 +108,18 @@ class Room(FloatLayout):
                 g.add_widget(tile)
                 self.layout[i][j] = tile
 
+    def clearState(self):
+        self.exit = None
+        self.items.clear()
+        self.carts.clear()
+        self.npcs.clear()
+        self.npcCartPairs.clear()
+        self.pushableCarts.clear()
+        self.walls.clear()
+        self.shelves.clear()
+        self.waters.clear()
+        self.adverts.clear()
+
     # Remove one entrence and make it wall
     # dir: (down=0,right=1,up=2,left=3)
     def removeDoor(self, dir: int):
@@ -118,5 +131,8 @@ class Room(FloatLayout):
             tile = self.layout[(len(self.layout)//2)][len(self.layout)-1]
         elif dir == 3:
             tile = self.layout[len(self.layout)-1][(len(self.layout)//2)]
+        else:
+            raise ValueError(f"Invalid door direction: {dir}")
         tile.makeWall()
-        self.walls.append(tile)
+        if tile not in self.walls:
+            self.walls.append(tile)
