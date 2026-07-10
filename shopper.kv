@@ -488,6 +488,14 @@
             font_size: 88
             center: 1728, 1912
             color: (0,0,0)
+        # Floor label
+        Label:
+            id: floorLabel
+            text: app.tr("game.floor_label") + " " + str(root.floorNumber)
+            size_hint: None, None
+            font_size: 88
+            center: 2350, 1912
+            color: (0,0,0)
         # Next floor button
         Button:
             id: nextFloorButton

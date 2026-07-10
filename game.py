@@ -15,6 +15,7 @@ class ShopperGame(Widget):
     player = ObjectProperty(None)
     currentRoom = ObjectProperty(None)
     timer = NumericProperty(const.floorTime)
+    floorNumber = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -26,7 +27,6 @@ class ShopperGame(Widget):
         self.currentLocation: tuple[int, int] # Player's current room coords (start from the middle)
         self.doors = [None, None, None, None] # door widgets, s,e,n,w
         self.gameActive = False # True if playing a floor
-        self.floorNumber = 0 # Current floor
 
     def on_kv_post(self, _):
         self.currentRoom = self.ids.room # Set currentRoom parameter
@@ -46,7 +46,6 @@ class ShopperGame(Widget):
         player.size = (player.width*0.8, player.height*0.8) # Set player size
         self.resetFloor()
         
-
     # Reset doors
     def resetDoors(self):
         for d in self.doors:
@@ -115,23 +114,28 @@ class ShopperGame(Widget):
         oldRoom = self.currentRoom
         grid = oldRoom.ids.grid
         if dir == "south":
-            self.currentLocation = (self.currentLocation[0], self.currentLocation[1] + 1)
-            player.center = (player.center[0], player.center[1] + grid.height - player.height)
+            newLocation = (self.currentLocation[0], self.currentLocation[1] + 1)
+            newPlayerCenter = (player.center[0], player.center[1] + grid.height - player.height)
         elif dir == "east":
-            self.currentLocation = (self.currentLocation[0] + 1, self.currentLocation[1])
-            player.center = (player.center[0] - grid.width + player.width, player.center[1])
+            newLocation = (self.currentLocation[0] + 1, self.currentLocation[1])
+            newPlayerCenter = (player.center[0] - grid.width + player.width, player.center[1])
         elif dir == "north":
-            self.currentLocation = (self.currentLocation[0], self.currentLocation[1] - 1)
-            player.center = (player.center[0], player.center[1] - grid.height + player.height)
+            newLocation = (self.currentLocation[0], self.currentLocation[1] - 1)
+            newPlayerCenter = (player.center[0], player.center[1] - grid.height + player.height)
         elif dir == "west":
-            self.currentLocation = (self.currentLocation[0] - 1, self.currentLocation[1])
-            player.center = (player.center[0] + grid.width - player.width, player.center[1])
+            newLocation = (self.currentLocation[0] - 1, self.currentLocation[1])
+            newPlayerCenter = (player.center[0] + grid.width - player.width, player.center[1])
         elif dir == "lift":
-            self.currentLocation = (-1, -1)
+            newLocation = (-1, -1)
+            newPlayerCenter = player.center
         else:
             raise ValueError(f'Cannot go to the next room in direction: {dir}')
         # Open new room view
-        newRoom = self.getRoom(self.currentLocation)
+        newRoom = self.getRoom(newLocation)
+        if newRoom is None:
+            return
+        self.currentLocation = newLocation
+        player.center = newPlayerCenter
 
         world = self.ids.world
         if oldRoom.parent:
@@ -150,7 +154,7 @@ class ShopperGame(Widget):
         if pos == (-1,-1):
             lift = True
         # Out of bounds
-        if len(self.rooms) <= x or len(self.rooms[0]) <= y or x < 0 or y < 0:
+        if x < 0 or y < 0 or len(self.rooms) <= x or len(self.rooms[0]) <= y:
             if not lift:
                 return None
         # Select existing room
@@ -195,6 +199,7 @@ class ShopperGame(Widget):
         self.gameActive = False
         self.ids.frame.opacity = 0
         self.ids.timer.opacity = 0
+        self.ids.floorLabel.opacity = 0
         self.ids.nextFloorButton.opacity = 1
         self.nextRoom("lift")
 
@@ -204,6 +209,7 @@ class ShopperGame(Widget):
         self.floorNumber += 1
         self.ids.frame.opacity = 1
         self.ids.timer.opacity = 1
+        self.ids.floorLabel.opacity = 1
         self.ids.nextFloorButton.opacity = 0
         self.resetFloor()
 
@@ -231,6 +237,8 @@ class ShopperGame(Widget):
         grid = self.currentRoom.ids.grid # Grid of tiles
         grid.col_default_width = const.worldHeigth/const.roomSize*0.98
         grid.row_default_height = const.worldHeigth/const.roomSize*0.98
+        # Reset timer
+        self.timer = const.floorTime
 
         self.centerPlayer()
         # Set doors

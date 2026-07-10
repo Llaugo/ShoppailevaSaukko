@@ -72,5 +72,6 @@
     "item.item25": "Runebergin torttu",
     "game.item_button": "Poimi\nesine",
     "game.lift_button": "Hissiin",
-    "game.floor_button": "Seuraava kerros"
+    "game.floor_button": "Seuraava kerros",
+    "game.floor_label": "Kerros"
 }
