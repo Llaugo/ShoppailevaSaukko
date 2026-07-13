@@ -416,6 +416,30 @@
 #            pos: self.pos
 #            size: self.size
 
+# Shopping list
+<ShoppingList>:
+    size_hint: None, None
+    Image:
+        id: bg
+        source: "images/shoplist.png"
+        pos: root.pos
+        size: root.size
+        fit_mode: "fill"
+    Label:
+        id: title
+        text: app.tr("game.shopping_list")
+        size_hint: None, None
+        size: self.texture_size
+        pos: bg.x + 35, bg.y + 571
+        halign: "left"
+        font_size: 88
+        color: 0, 0, 0, 1
+    BoxLayout:
+        id: contentsBox
+        orientation: "vertical"
+        spacing: 10
+        pos: root.x + 39, root.y + 200
+
 
 # The game view
 <ShopperGame>:
@@ -445,6 +469,10 @@
         Player:
             id: player
             center: world.width/2, world.height/2 + self.height/4
+        ShoppingList:
+            id: shoplist
+            size: 780, 690
+            pos: 3110,1200
         # Item button
         Button:
             id: itemButton
@@ -480,6 +508,7 @@
             size: root.design_w, root.design_h
             center: (world.width/2, world.height/2)
             fit_mode: "contain"
+            opacity: 1 if root.gameActive else 0
         # Timer
         Label:
             id: timer
@@ -488,6 +517,7 @@
             font_size: 88
             center: 1728, 1912
             color: (0,0,0)
+            opacity: 1 if root.gameActive else 0
         # Floor label
         Label:
             id: floorLabel
@@ -496,6 +526,7 @@
             font_size: 88
             center: 2350, 1912
             color: (0,0,0)
+            opacity: 1 if root.gameActive else 0
         # Next floor button
         Button:
             id: nextFloorButton
@@ -506,8 +537,8 @@
             size_hint: None, None
             size:  900, 225
             center: (world.width/2, 400)
+            opacity: 0 if root.gameActive else 1
             disabled: self.opacity == 0
-            opacity: 0
             background_normal: "images/buttons/longbutton0.png"
             background_down:  "images/buttons/longbutton1.png"
             on_release: root.nextFloor()

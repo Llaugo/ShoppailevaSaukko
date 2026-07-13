@@ -1,11 +1,12 @@
 from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty, NumericProperty
+from kivy.properties import ObjectProperty, NumericProperty, BooleanProperty
 from kivy.clock import Clock
 from kivy.core.window import Window
 
 import const
 from room import Room
 from door import Door
+from shoppingList import ShoppingList
 import random
 
 # Class for the game (floors)
@@ -14,8 +15,10 @@ class ShopperGame(Widget):
     design_h = NumericProperty(const.worldHeigth)
     player = ObjectProperty(None)
     currentRoom = ObjectProperty(None)
+    shoppingList = ObjectProperty(None)
     timer = NumericProperty(const.floorTime)
     floorNumber = NumericProperty(0)
+    gameActive = BooleanProperty(True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -26,7 +29,7 @@ class ShopperGame(Widget):
         self.half = const.floorSize // 2
         self.currentLocation: tuple[int, int] # Player's current room coords (start from the middle)
         self.doors = [None, None, None, None] # door widgets, s,e,n,w
-        self.gameActive = False # True if playing a floor
+        #self.gameActive = False # True if playing a floor
 
     def on_kv_post(self, _):
         self.currentRoom = self.ids.room # Set currentRoom parameter
@@ -45,6 +48,8 @@ class ShopperGame(Widget):
         player = self.ids.player
         player.size = (player.width*0.8, player.height*0.8) # Set player size
         self.resetFloor()
+        # Shopping list
+        shoppingList = self.ids.shoplist
         
     # Reset doors
     def resetDoors(self):
@@ -197,9 +202,6 @@ class ShopperGame(Widget):
     # End the current level and go to checkpoint/lift view
     def escapeFloor(self):
         self.gameActive = False
-        self.ids.frame.opacity = 0
-        self.ids.timer.opacity = 0
-        self.ids.floorLabel.opacity = 0
         self.ids.nextFloorButton.opacity = 1
         self.nextRoom("lift")
 
@@ -207,9 +209,6 @@ class ShopperGame(Widget):
     def nextFloor(self):
         self.gameActive = True
         self.floorNumber += 1
-        self.ids.frame.opacity = 1
-        self.ids.timer.opacity = 1
-        self.ids.floorLabel.opacity = 1
         self.ids.nextFloorButton.opacity = 0
         self.resetFloor()
 
