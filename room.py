@@ -75,7 +75,7 @@ class Room(FloatLayout):
                         else:
                             tile = Tile(random.randint(1,3))
                 elif c == 2: # Shelf
-                    tile = Tile(random.randint(10,18)) # + self.roomDistance
+                    tile = Tile(random.randint(10,18), roomDist) # + self.roomDistance
                     if tile.item:
                         self.items.append(tile.item)
                     self.shelves.append(tile)
