@@ -6,12 +6,14 @@ from kivy.clock import Clock
 
 
 import const
+import utils
 from spriteSheet import SpriteSheet
 from random import randint
 
 # Class for the listing the wanted items. Has also the accompanied images and texts.
 class ShoppingList(Widget):
     texture = ObjectProperty(None)  # holds a Texture
+    showImgTimer = NumericProperty(0) # Seconds left showing the received item
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -24,7 +26,6 @@ class ShoppingList(Widget):
         self.contents.append([const.shop()[0][randint(0,4)],0,10])
         self.sheet = SpriteSheet('images/items.png',(46,46))
         self.texture = self.sheet.getImage(0)
-        self.showImgTimer = 0
         self.filled = False # True if the list is completed
         Clock.schedule_once(lambda dt: self.refreshContents(), 0)
 
@@ -80,18 +81,28 @@ class ShoppingList(Widget):
             if self.contents[i][0] == itemName: # Check if item is in the list
                 self.contents[i][1] = min(self.contents[i][1] + 1, self.contents[i][2]) # Increase item count
                 imgNum = 0
-                for j,name in enumerate([x for xs in const.shop(self.lang) for x in xs]): # Find item name in flattened list of all items
+                for j,name in enumerate([x for xs in const.shop() for x in xs]): # Find item name in flattened list of all items
                     if name == itemName:
                         imgNum = j
                 self.texture = self.sheet.getImage(imgNum) # show item image
-                self.showImgTimer = 100
                 self.checkFillStatus()
                 received = True
                 break
+        if received: # Refresh if item added
+            self.refreshContents()
+            self.ids.itemText.text = utils.tr("game.found_item") + "\n[b]" + itemName + "[/b]\n" + utils.tr("game.correct_item_text")
+        else:
+            self.ids.itemText.text = utils.tr("game.found_item") + "\n[b]" + itemName + "[/b]\n" + utils.tr("game.incorrect_item_text")
+        self.showImgTimer = 5
         return received
     
     def loseItem(self, itemI):
         self.contents[itemI] = [self.contents[itemI][0], self.contents[itemI][1]-1, self.contents[itemI][2]]
+        self.refreshContents()
+
+    def update(self, dt):
+        self.showImgTimer = max(0, self.showImgTimer-dt)
+            
 
 """
     def saveList(self):

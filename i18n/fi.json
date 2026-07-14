@@ -74,5 +74,8 @@
     "game.lift_button": "Hissiin",
     "game.floor_button": "Seuraava kerros",
     "game.floor_label": "Kerros",
-    "game.shopping_list": "Ostoslista"
+    "game.shopping_list": "Ostoslista",
+    "game.found_item": "Löysit esineen: ",
+    "game.correct_item_text": "Tämänhän tarvitsetkin!",
+    "game.incorrect_item_text": "Et tarvitse tätä..."
 }

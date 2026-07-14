@@ -439,6 +439,18 @@
         orientation: "vertical"
         spacing: 10
         pos: root.x + 39, root.y + 200
+    Label:
+        id: itemText
+        text: "item"
+        size_hint: None, None
+        size: 620, 150
+        pos: bg.x + 90, bg.y + 35
+        opacity: 0 if root.showImgTimer == 0 else 1
+        font_size: 45
+        color: 0, 0, 0, 1
+        halign: "center"
+        valign: "middle"
+        markup: True
 
 
 # The game view

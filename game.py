@@ -49,7 +49,7 @@ class ShopperGame(Widget):
         player.size = (player.width*0.8, player.height*0.8) # Set player size
         self.resetFloor()
         # Shopping list
-        shoppingList = self.ids.shoplist
+        self.shoppingList = self.ids.shoplist
         
     # Reset doors
     def resetDoors(self):
@@ -81,6 +81,7 @@ class ShopperGame(Widget):
         if dt < 0.3: # Player can phase through walls if there's a spike in dt
             player.update(dt, self) # update player
             self.currentRoom.update(dt, player) # update room
+            self.shoppingList.update(dt)
             # Check if player is standing on the lift
             if self.currentRoom.exit != None and player.collide_widget(self.currentRoom.exit):
                 self.ids.liftButton.opacity = 1 # Show floor exit button
@@ -109,6 +110,7 @@ class ShopperGame(Widget):
     def pickUpItem(self):
         for item in self.currentRoom.items:
             if self.ids.player.collide_widget(item):
+                self.shoppingList.receiveItem(item.name)
                 self.currentRoom.removeItem(item)
                 break
 
