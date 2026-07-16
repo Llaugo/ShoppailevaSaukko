@@ -13,7 +13,7 @@ max_steps_per_frame = 20
 tileSize = 46
 
 # Player's base stats
-basePlayerSpeed = 300                # Speed
+basePlayerSpeed = 400                # Speed
 basePlayerStrength = 0             # Strength
 basePlayerSpeechDuration = 120     # Speech text visibility duration
 playerDimensions = (36, 41)

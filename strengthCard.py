@@ -1,5 +1,8 @@
 from kivy.uix.widget import Widget
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.core.image import Image
+from kivy.properties import NumericProperty, ListProperty, BooleanProperty, StringProperty
+
 import const
 from spriteSheet import SpriteSheet
 import playerClass
@@ -9,8 +12,16 @@ import math
 # Each card gives the player some ability or boost, which has a timer during which the strength is active.
 # After the ability ends, there is a cooldown for using the ability.
 class StrengthCard(Widget):
+    imageNum = NumericProperty(0)
+    ready = BooleanProperty(False)
+    timer = NumericProperty(0)
+    cooldown = NumericProperty(0)
+    
     # imageNum: the index of the card image
-    def __init__(self, imageNum):
+    def __init__(self, imageNum=0, **kwargs):
+        kwargs["imageNum"] = imageNum
+        super().__init__(**kwargs)
+
         self.imageNum = imageNum
         self.auraDist = 0
         self.timer = 0          # timer for the ability
@@ -18,10 +29,10 @@ class StrengthCard(Widget):
         self.timerMax = 8*60     # timer duration
         self.cooldownMax = 30*60  # cooldown duration
         self.level = 1          # Level of the card
-        self.image = Image(f"images/cards/card{self.imageNum}").texture
         self.xpSprite = SpriteSheet('images/xp_sheet.png', (178, 18))
         self.xpImage = self.xpSprite.getImage(round((self.level*10)%10))
         self.ready = False
+
 
     # Activates the card and starts the active timer if the card is not on cooldown
     # Returns True if activation was successful, False otherwise

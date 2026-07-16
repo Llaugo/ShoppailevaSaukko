@@ -4,7 +4,6 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.properties import NumericProperty, ListProperty, BooleanProperty, StringProperty
 from kivy.animation import Animation
 from kivy.app import App
-import strengthCard
 from spriteSheet import SpriteSheet
 import random
 
@@ -126,5 +125,11 @@ class StrengthMenu(Screen):
             fav = self.favorites[self.inspectPile]
             cards = self.decks[self.inspectPile]
             self.ids.cards_rv.data = [{"source": f"images/cards/card{c}.png", "index": j, "selected": (j == fav)} for j, c in enumerate(cards)]
-            
+    
+    def startGame(self):
+        game_screen = self.manager.get_screen("game")
+        game = game_screen.ids.game
+        f = self.favorites
+        game.setStrengthCards([f[0], f[1]+5, f[2]+10, f[3]+14, f[4]+17, f[5]+21])
+        self.manager.current = "game"
 

@@ -98,7 +98,6 @@
         size: Window.size
         center: Window.center
     Label:
-        id: selectcategory
         text: app.tr("strengths.title")
         font_size: bg.norm_image_size[0] * 0.040
         color: (0,0,0)
@@ -312,7 +311,7 @@
             size:  (bg.norm_image_size[0]*(400/4000.)), (bg.norm_image_size[1]*(100/2000.))
             background_normal: "images/buttons/longbutton0.png"
             background_down:  "images/buttons/longbutton1.png"
-            on_release: root.manager.current = 'game'
+            on_release: root.startGame()
 
 
 <SettingsScreen>:
@@ -452,10 +451,56 @@
         valign: "middle"
         markup: True
 
+# Strength card
+<StrengthCard>:
+    size_hint: None, None
+    size: 1.5*250, 1.5*350
+    Image:
+        id: card
+        pos: root.pos
+        size: root.size
+        source: "images/cards/card{}.png".format(root.imageNum)
+        fit_mode: "contain"
+
+
+# Deck of 6 strength cards
+<StrengthDeck>:
+    size_hint: None, None
+    # Cards
+    GridLayout:
+        id: cards
+        cols: 2
+        rows: 3
+        size_hint: None, None
+        spacing: 70, 70
+        size: 2*1.5*250 + self.spacing[0], 3*1.5*350 + 1.5*self.spacing[1]
+        center: root.center
+        #row_force_default: True
+        #col_force_default: True
+        row_default_height: 350*1.5
+        col_default_width:  250*1.5
+    # Overlays
+    GridLayout:
+        id: cards
+        cols: 2
+        rows: 3
+        size_hint: None, None
+        spacing: 70, 70
+        size: 2*1.5*250 + self.spacing[0], 3*1.5*350 + 1.5*self.spacing[1]
+        center: root.center
+        #row_force_default: True
+        #col_force_default: True
+        row_default_height: 350*1.5
+        col_default_width:  250*1.5
+
+        
+    
+
 
 # The game view
 <ShopperGame>:
     size_hint: 1,1
+    id: game
     canvas:
         Color: 
             rgba: 0.627,0.8820,1,1
@@ -485,6 +530,10 @@
             id: shoplist
             size: 780, 690
             pos: 3110,1200
+        StrengthDeck:
+            id: strengthDeck
+            size: 900, 1700
+            center: 500, 950
         # Item button
         Button:
             id: itemButton

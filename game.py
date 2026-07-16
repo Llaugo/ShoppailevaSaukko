@@ -7,6 +7,7 @@ import const
 from room import Room
 from door import Door
 from shoppingList import ShoppingList
+from strengthDeck import StrengthDeck
 import random
 
 # Class for the game (floors)
@@ -16,6 +17,7 @@ class ShopperGame(Widget):
     player = ObjectProperty(None)
     currentRoom = ObjectProperty(None)
     shoppingList = ObjectProperty(None)
+    strengthDeck = ObjectProperty(None)
     timer = NumericProperty(const.floorTime)
     floorNumber = NumericProperty(0)
     gameActive = BooleanProperty(True)
@@ -50,6 +52,11 @@ class ShopperGame(Widget):
         self.resetFloor()
         # Shopping list
         self.shoppingList = self.ids.shoplist
+        # Strength deck
+        self.strengthDeck = self.ids.strengthDeck
+    
+    def setStrengthCards(self, cards):
+        self.strengthDeck.setCards(cards)
         
     # Reset doors
     def resetDoors(self):
