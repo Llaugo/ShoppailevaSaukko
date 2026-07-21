@@ -455,12 +455,19 @@
 <StrengthCard>:
     size_hint: None, None
     size: 1.5*250, 1.5*350
-    Image:
+    Image: # Card image
         id: card
         pos: root.pos
         size: root.size
         source: "images/cards/card{}.png".format(root.imageNum)
         fit_mode: "contain"
+    Image: # Overlay image
+        id: overlay
+        pos: root.pos
+        size: root.size
+        texture: root.overlayTexture
+        fit_mode: "contain"
+
 
 
 # Deck of 6 strength cards

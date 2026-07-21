@@ -1,7 +1,7 @@
 from kivy.uix.widget import Widget
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.core.image import Image
-from kivy.properties import NumericProperty, ListProperty, BooleanProperty, StringProperty
+from kivy.properties import NumericProperty, ObjectProperty, BooleanProperty
 
 import const
 from spriteSheet import SpriteSheet
@@ -13,9 +13,10 @@ import math
 # After the ability ends, there is a cooldown for using the ability.
 class StrengthCard(Widget):
     imageNum = NumericProperty(0)
-    ready = BooleanProperty(False)
+    ready = BooleanProperty(False) # Is the card selected/pressed
     timer = NumericProperty(0)
     cooldown = NumericProperty(0)
+    overlayTexture = ObjectProperty(None, allownone=True)
     
     # imageNum: the index of the card image
     def __init__(self, imageNum=0, **kwargs):
@@ -24,14 +25,37 @@ class StrengthCard(Widget):
 
         self.imageNum = imageNum
         self.auraDist = 0
-        self.timer = 0          # timer for the ability
-        self.cooldown = 0       # timer for the cooldown
         self.timerMax = 8*60     # timer duration
         self.cooldownMax = 30*60  # cooldown duration
         self.level = 1          # Level of the card
+        self.shinePhase = 0
+        self.overlaySheet = SpriteSheet("images/card_overlay.png", (250, 350))
+        self.setOverlay(0)
+
         self.xpSprite = SpriteSheet('images/xp_sheet.png', (178, 18))
         self.xpImage = self.xpSprite.getImage(round((self.level*10)%10))
-        self.ready = False
+
+    def setOverlay(self, frameIndex):
+        self.overlayTexture = self.overlaySheet.getImage(frameIndex)
+
+    #def clearOverlay(self):
+    #    self.overlayTexture = None
+
+    def updateOverlay(self):
+        frame = 0
+        if self.timer > 0:
+            # Active/running animation: frames 5–8
+            frame = math.floor(self.timer/10) % 4 + 5
+        elif self.cooldown > 0:
+            # Cooldown animation: frames 9–24
+            progress = (self.cooldownMax - self.cooldown)/self.cooldownMax
+            frame = math.floor(progress*16) + 9
+            frame = min(frame, 24)
+        elif self.ready:
+            self.shinePhase += 1
+            # Selected/glowing animation: frames 1–4
+            frame = math.floor(self.shinePhase/15) % 4 + 1
+        self.setOverlay(frame)
 
 
     # Activates the card and starts the active timer if the card is not on cooldown
@@ -51,17 +75,18 @@ class StrengthCard(Widget):
 
     # Do card action if card is active
     def update(self, floor):
+        self.updateOverlay()
         self.updateTimers()
 
     # update the timers of the card
     def updateTimers(self):
-        if self.timer:          # Update timer if timer is active
+        if self.timer > 0:          # Update timer if timer is active
             self.timer -= 1
-        elif self.cooldown:     # Update cooldown timer if cooldown is active
+        elif self.cooldown > 0:     # Update cooldown timer if cooldown is active
             self.cooldown -= 1
 
     def updateCooldown(self):
-        if self.cooldown:
+        if self.cooldown > 0:
             self.cooldown -= 1
 
     def levelup(self, amount=const.cardExp):
@@ -82,8 +107,11 @@ class StrengthCard(Widget):
             return True
         return False
     
+    # Choose the card if not running or on cooldown
     def press(self):
-        self.ready = True
+        if self.cooldown <= 0 and self.timer <= 0:
+            self.ready = True
+            self.shinePhase = 0
 
     def unpress(self):
         self.ready = False
@@ -138,7 +166,7 @@ class JudgementCard(StrengthCard):
     def update(self, floor):
         if self.timer == 1:
             floor.showItemNames(0)
-        self.updateTimers()
+        super().update(floor)
 
     # Reset timers and hide item names
     def reset(self, floor):
@@ -181,7 +209,7 @@ class PerspectiveCard(StrengthCard):
     def update(self, floor):
         if self.timer == 1:
             floor.setBirdsEye(0)
-        self.updateTimers()
+        super().update(floor)
 
     # Reset view to normal
     def reset(self, floor):
@@ -204,7 +232,7 @@ class BraveryCard(StrengthCard):
     def update(self, floor):
         if self.timer == 1:
             floor.player.changeStrength(const.basePlayerStrength)
-        self.updateTimers()
+        super().update(floor)
 
     def reset(self, floor):
         super().reset(floor)
@@ -301,7 +329,7 @@ class KindnessCard(StrengthCard):
     def update(self, floor):
         if self.level == 3 and self.timer and floor.player.isOnNpc(floor.currentRoom):
             floor.player.changeSpeed(const.basePlayerSpeed*1.3, 30) # change speed upon collision
-        self.updateTimers()
+        super().update(floor)
 
     def reset(self, floor):
         floor.player.setNpcCollitionTimer(0)
@@ -478,7 +506,7 @@ class HumilityCard(StrengthCard):
     def update(self, floor):
         if self.timer == 1:
             floor.player.toggleSize(floor.currentRoom)
-        self.updateTimers()
+        super().update(floor)
 
     # Reset size to normal
     def reset(self, floor):
@@ -502,7 +530,7 @@ class PrudenceCard(StrengthCard):
     def update(self, floor):
         if self.timer == 1:
             floor.stopTime()
-        self.updateTimers()
+        super().update(floor)
     
     def reset(self, floor):
         super().reset(floor)
@@ -524,7 +552,7 @@ class RegulationCard(StrengthCard):
     def update(self, floor):
         if self.timer == 1:
             floor.advertBlockEnd()
-        self.updateTimers()
+        super().update(floor)
 
     def reset(self,floor):
         super().reset(floor)
@@ -576,6 +604,7 @@ class GratitudeCard(StrengthCard):
             self.timer -= 1
         if self.cooldown:
             self.cooldown -= 1
+        self.updateOverlay()
     
     # Reset player speed to normal
     def reset(self, floor):

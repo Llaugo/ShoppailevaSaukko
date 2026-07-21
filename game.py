@@ -47,8 +47,8 @@ class ShopperGame(Widget):
         self.bind(size=rescale) # Resize/rescale everything reflexively
         Clock.schedule_once(rescale, 0)
         # Player sizing
-        player = self.ids.player
-        player.size = (player.width*0.8, player.height*0.8) # Set player size
+        self.player = self.ids.player
+        self.player.size = (self.player.width*0.8, self.player.height*0.8) # Set player size
         self.resetFloor()
         # Shopping list
         self.shoppingList = self.ids.shoplist
@@ -89,6 +89,7 @@ class ShopperGame(Widget):
             player.update(dt, self) # update player
             self.currentRoom.update(dt, player) # update room
             self.shoppingList.update(dt)
+            self.strengthDeck.update(dt, self)
             # Check if player is standing on the lift
             if self.currentRoom.exit != None and player.collide_widget(self.currentRoom.exit):
                 self.ids.liftButton.opacity = 1 # Show floor exit button
