@@ -1,4 +1,5 @@
 from kivy.uix.widget import Widget
+from kivy.properties import BooleanProperty
 
 import math
 import const
@@ -6,12 +7,15 @@ from spriteSheet import SpriteSheet
 import strengthCard
 
 class StrengthDeck(Widget):
+    hasReadyCard = BooleanProperty(False)
+
     # cards: list of strength cards
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.shinePhase = 0
         self.overlaySheet = SpriteSheet('images/card_overlay.png', (250,350))
         self.cards = []
+        self.activate = False # Activate current card
 
     def setCards(self, cardIDs):
         self.cards.clear()
@@ -31,7 +35,8 @@ class StrengthDeck(Widget):
                 if card.collide_point(*touch.pos):
                     self.selectCard(card)
                     return True
-        self.selectCard()
+        if not self.ids.activateButton.collide_point(*touch.pos):
+            self.selectCard()
         return super().on_touch_down(touch)
 
     def selectCard(self, selectedCard=None):
@@ -39,34 +44,30 @@ class StrengthDeck(Widget):
             card.unpress()
         if selectedCard != None:
             selectedCard.press()
+        self.updateReadyStatus()
 
     def update(self, dt, game):
-        cardReady = False
         card4 = self.cards[4]
         for i, card in enumerate(self.cards):
-            if card.ready:
-                pass
-                # TODO
-                """
-                if self.activateButton.pressComplete:
-                    if not card.tryActivate(game):
-                        card.setOverlay(0)
-                    cardReady = False
-                elif card.auraDist:
-                    game.player.changeAura(card.auraDist)
-                    cardReady = True
-                """
+            if card.ready and self.activate:
+                card.tryActivate(game)
+                self.activate = False
+                self.updateReadyStatus()
             if card4.imageNum == 19 and card4.timer and i != 4: # If prudence is on, update only cooldown timers
                 if not card.timer:
-                    card.updateCooldown()
+                    card.updateCooldown(dt)
                     if card4.level == 3 and card4.timer % 2: # If prudence is on level 3, every other tick doubles the cooldown reduce
-                        card.updateCooldown()
-
+                        card.updateCooldown(dt)
                 card.updateOverlay()
             else:
-                card.update(game)
-        if not cardReady:
-            pass
-            #game.player.changeAura(0)
+                card.update(dt, game)
+    
+    def updateReadyStatus(self):
+        self.hasReadyCard = any(card.ready for card in self.cards)
 
-        
+    def activateCard(self):
+        self.activate = True
+
+    def reset(self, game):
+        for card in self.cards:
+            card.reset(game)

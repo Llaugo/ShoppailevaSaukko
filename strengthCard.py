@@ -25,13 +25,12 @@ class StrengthCard(Widget):
 
         self.imageNum = imageNum
         self.auraDist = 0
-        self.timerMax = 8*60     # timer duration
-        self.cooldownMax = 30*60  # cooldown duration
+        self.timerMax = 8       # timer duration in seconds
+        self.cooldownMax = 30   # cooldown duration in seconds
         self.level = 1          # Level of the card
         self.shinePhase = 0
         self.overlaySheet = SpriteSheet("images/card_overlay.png", (250, 350))
         self.setOverlay(0)
-
         self.xpSprite = SpriteSheet('images/xp_sheet.png', (178, 18))
         self.xpImage = self.xpSprite.getImage(round((self.level*10)%10))
 
@@ -60,7 +59,7 @@ class StrengthCard(Widget):
 
     # Activates the card and starts the active timer if the card is not on cooldown
     # Returns True if activation was successful, False otherwise
-    def tryActivate(self, floor):
+    def tryActivate(self, game):
         if not self.cooldown:
             self.timer = self.timerMax
             self.cooldown = self.cooldownMax
@@ -74,20 +73,20 @@ class StrengthCard(Widget):
         self.auraDist += aura
 
     # Do card action if card is active
-    def update(self, floor):
+    def update(self, dt, game):
         self.updateOverlay()
-        self.updateTimers()
+        self.updateTimers(dt)
 
     # update the timers of the card
-    def updateTimers(self):
+    def updateTimers(self, dt):
         if self.timer > 0:          # Update timer if timer is active
-            self.timer -= 1
+            self.timer = max(self.timer - dt, 0)
         elif self.cooldown > 0:     # Update cooldown timer if cooldown is active
-            self.cooldown -= 1
+            self.cooldown = max(self.cooldown - dt, 0)
 
-    def updateCooldown(self):
+    def updateCooldown(self, dt):
         if self.cooldown > 0:
-            self.cooldown -= 1
+            self.cooldown = max(self.cooldown - dt, 0)
 
     def levelup(self, amount=const.cardExp):
         self.level = min(self.level+amount, const.maxCardLevel)
@@ -96,9 +95,10 @@ class StrengthCard(Widget):
         return False
 
     # Reset the card timers to the base state
-    def reset(self, floor):
+    def reset(self, game):
         self.timer = 0
         self.cooldown = 0
+        self.setOverlay(0)
         self.unpress()
 
     # Returns True if timer is on, False if not
@@ -124,9 +124,9 @@ class CreativityCard(StrengthCard):
         self.cooldownMax = 60*60
         self.auraDist = 184
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.jumpGap(math.floor(self.level))
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.jumpGap(math.floor(self.level))
             self.levelup()
             return True
         return False
@@ -138,10 +138,10 @@ class CuriosityCard(StrengthCard):
         self.timerMax = 1
         self.auraDist = 80
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.breakBox(self.auraDist):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.breakBox(self.auraDist):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,0,25)
@@ -154,24 +154,24 @@ class JudgementCard(StrengthCard):
         super().__init__(2)
 
     # Show the item names in the room if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
+    def tryActivate(self, game):
+        if super().tryActivate(game):
             self.timer = self.timerMax
-            floor.showItemNames(math.floor(self.level))
+            game.showItemNames(math.floor(self.level))
             self.levelup()
             return True
         return False
 
     # Hide item names, if timer ends
-    def update(self, floor):
+    def update(self, dt, game):
         if self.timer == 1:
-            floor.showItemNames(0)
-        super().update(floor)
+            game.showItemNames(0)
+        super().update(dt, game)
 
     # Reset timers and hide item names
-    def reset(self, floor):
-        super().reset(floor)
-        floor.showItemNames(0)
+    def reset(self, game):
+        super().reset(game)
+        game.showItemNames(0)
 
 # Learning card gets rid of darkness in the dark rooms
 class LearningCard(StrengthCard):
@@ -181,10 +181,10 @@ class LearningCard(StrengthCard):
         self.cooldownMax = 120*60
 
     # Makes the visible area around the player wider if in a dark room
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.changeDarkness(0, 0, True):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.changeDarkness(0, 0, True):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-30*60)
@@ -197,46 +197,46 @@ class PerspectiveCard(StrengthCard):
         super().__init__(4)
 
     # Show rooms around the current room if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.setBirdsEye(math.floor(self.level)+2)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.setBirdsEye(math.floor(self.level)+2)
             if self.levelup():
                 self.upgradeCard(120)
             return True
         return False
 
     # Set view to normal when the timer ends
-    def update(self, floor):
+    def update(self, dt, game):
         if self.timer == 1:
-            floor.setBirdsEye(0)
-        super().update(floor)
+            game.setBirdsEye(0)
+        super().update(dt, game)
 
     # Reset view to normal
-    def reset(self, floor):
-        super().reset(floor)
-        floor.setBirdsEye(0)
+    def reset(self, game):
+        super().reset(game)
+        game.setBirdsEye(0)
 
 # Bravery card makes the player able to push heavier carts
 class BraveryCard(StrengthCard):
     def __init__(self):
         super().__init__(5)
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.player.changeStrength(8)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.player.changeStrength(8)
             if self.levelup():
                 self.upgradeCard(3*60, -5*60)
             return True
         return False
 
-    def update(self, floor):
+    def update(self, dt, game):
         if self.timer == 1:
-            floor.player.changeStrength(const.basePlayerStrength)
-        super().update(floor)
+            game.player.changeStrength(const.basePlayerStrength)
+        super().update(dt, game)
 
-    def reset(self, floor):
-        super().reset(floor)
-        floor.player.changeStrength(const.basePlayerStrength)
+    def reset(self, game):
+        super().reset(game)
+        #game.player.changeStrength(const.basePlayerStrength)
 
 # Perseverance card makes player to be able to walk through water
 class PerseveranceCard(StrengthCard):
@@ -245,9 +245,9 @@ class PerseveranceCard(StrengthCard):
         self.swimSpeed = const.basePlayerSpeed*0.25
 
     # Change player swimming speed if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.player.swim(self.swimSpeed, self.timerMax)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.player.swim(self.swimSpeed, self.timerMax)
             if self.levelup():
                 self.upgradeCard(5*60)
                 self.swimSpeed += const.basePlayerSpeed*0.1
@@ -255,9 +255,9 @@ class PerseveranceCard(StrengthCard):
         return False
 
     # Reset player swimming speed to normal (off)
-    def reset(self, floor):
-        super().reset(floor)
-        floor.player.resetSwim()
+    def reset(self, game):
+        super().reset(game)
+        #game.player.resetSwim()
 
 # Honesty card rotates the adverts
 class HonestyCard(StrengthCard):
@@ -266,10 +266,10 @@ class HonestyCard(StrengthCard):
         self.timerMax = 1
         self.auraDist = const.tileSize*2
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.rotateAdverts(self.auraDist):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.rotateAdverts(self.auraDist):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-5*60,const.tileSize*1.5)
@@ -282,18 +282,18 @@ class ZestCard(StrengthCard):
         super().__init__(8)
 
     # Change players speed if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.player.changeSpeed(const.basePlayerSpeed*1.5, self.timerMax)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.player.changeSpeed(const.basePlayerSpeed*1.5, self.timerMax)
             if self.levelup():
-                self.upgradeCard(5*60)
+                self.upgradeCard(5)
             return True
         return False
 
     # Reset player speed to normal
-    def reset(self, floor):
-        super().reset(floor)
-        floor.player.resetSpeed()
+    def reset(self, game):
+        super().reset(game)
+        game.player.resetSpeed()
 
 # Grit card destroys advert in front of the player
 class GritCard(StrengthCard):
@@ -302,10 +302,10 @@ class GritCard(StrengthCard):
         self.timerMax = 1
         self.auraDist = const.tileSize
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.destroyAdvert(self.auraDist):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.destroyAdvert(self.auraDist):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,0,const.tileSize*1.2)
@@ -318,22 +318,22 @@ class KindnessCard(StrengthCard):
         super().__init__(10)
         self.timerMax = 5*60
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.player.setNpcCollitionTimer(self.timerMax)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.player.setNpcCollitionTimer(self.timerMax)
             if self.levelup():
                 self.upgradeCard(3*60)
             return True
         return False
 
-    def update(self, floor):
-        if self.level == 3 and self.timer and floor.player.isOnNpc(floor.currentRoom):
-            floor.player.changeSpeed(const.basePlayerSpeed*1.3, 30) # change speed upon collision
-        super().update(floor)
+    def update(self, dt, game):
+        if self.level == 3 and self.timer and game.player.isOnNpc(game.currentRoom):
+            game.player.changeSpeed(const.basePlayerSpeed*1.3, 30) # change speed upon collision
+        super().update(dt, game)
 
-    def reset(self, floor):
-        floor.player.setNpcCollitionTimer(0)
-        super().reset(floor)
+    def reset(self, game):
+        #game.player.setNpcCollitionTimer(0)
+        super().reset(game)
 
 # Love card loads the card five times with speaking to npcs and then is used to fly over obstacles
 class LoveCard(StrengthCard):
@@ -345,17 +345,17 @@ class LoveCard(StrengthCard):
         self.battery = self.batteryReset
         self.timerMax = 1*60
 
-    def tryActivate(self, floor):
+    def tryActivate(self, game):
         leveledUp = False
-        if super().tryActivate(floor):
+        if super().tryActivate(game):
             if self.battery < 6:
-                if floor.findLove():
+                if game.findLove():
                     self.battery += 1
                     leveledUp = True
                 else:
-                    self.reset(floor)
+                    self.reset(game)
             elif self.battery >= 6:
-                floor.player.fly(self.timerMax)
+                game.player.fly(self.timerMax)
                 self.battery = self.batteryReset
                 leveledUp = True
             if leveledUp:
@@ -364,19 +364,6 @@ class LoveCard(StrengthCard):
                     self.batteryReset += 1
                 return True
         return False
-                
-
-    def reset(self, floor):
-        super().reset(floor)
-        self.blitXP()
-
-    def press(self):
-        self.ready = True
-        self.blitXP(self.battery)
-
-    def unpress(self):
-        self.ready = False
-        self.blitXP()
 
 # Social card Shows the cart-npc pairs
 class SocialCard(StrengthCard):
@@ -385,19 +372,19 @@ class SocialCard(StrengthCard):
         self.timerMax = 4*60
         self.cooldownMax = 40*60
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.showCartOwners(self.timerMax):
-                super().reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.showCartOwners(self.timerMax):
+                super().reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(4*60,-5*60)
                 return True
         return False
 
-    def reset(self, floor):
-        floor.resetCartOwnerView()
-        super().reset(floor)
+    def reset(self, game):
+        #game.resetCartOwnerView()
+        super().reset(game)
 
 # Compassion card swaps the player with an npc
 class CompassionCard(StrengthCard):
@@ -406,10 +393,10 @@ class CompassionCard(StrengthCard):
         self.timerMax = 1
         self.cooldownMax = 16*60
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.swapPlayer():
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.swapPlayer():
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-7*60)
@@ -423,19 +410,19 @@ class FairnessCard(StrengthCard):
         self.timerMax = 3*60 # Here timer counts how long the accessed cart is higlighted
         self.cooldownMax = 25*60
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.askCartPushing(self.timerMax):
-                super().reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.askCartPushing(self.timerMax):
+                super().reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-8*60)
                 return True
         return False
 
-    def reset(self, floor):
-        floor.resetCartOwnerView()
-        super().reset(floor)
+    def reset(self, game):
+        #game.resetCartOwnerView()
+        super().reset(game)
 
 # Leadership card makes an npc push their own cart
 class LeadershipCard(StrengthCard):
@@ -444,10 +431,10 @@ class LeadershipCard(StrengthCard):
         self.timerMax = 1
         self.cooldownMax = 40*60
 
-    def  tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.leadCartPushing():
-                self.reset(floor)
+    def  tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.leadCartPushing():
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-5*60)
@@ -460,10 +447,10 @@ class TeamworkCard(StrengthCard):
         super().__init__(16)
         self.timerMax = 1
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.tradeWithNpc(math.floor(self.level)):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.tradeWithNpc(math.floor(self.level)):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-3*60)
@@ -478,10 +465,10 @@ class ForgivenessCard(StrengthCard):
         self.auraDist = const.tileSize
 
     # Clean nearby water from the room if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.cleanWater(self.auraDist):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.cleanWater(self.auraDist):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-5*60,const.tileSize)
@@ -494,24 +481,24 @@ class HumilityCard(StrengthCard):
         super().__init__(18)
 
     # Make player smaller if cooldown is not on
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.player.toggleSize(floor.currentRoom, 0.5)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.player.toggleSize(game.currentRoom, 0.5)
             if self.levelup():
                 self.upgradeCard(4*60,-4*60)
             return True
         return False
 
     # Turn player size back to normal if timer is out
-    def update(self, floor):
+    def update(self, dt, game):
         if self.timer == 1:
-            floor.player.toggleSize(floor.currentRoom)
-        super().update(floor)
+            game.player.toggleSize(game.currentRoom)
+        super().update(dt, game)
 
     # Reset size to normal
-    def reset(self, floor):
-        super().reset(floor)
-        floor.player.toggleSize(floor.currentRoom)
+    def reset(self, game):
+        super().reset(game)
+        #game.player.toggleSize(game.currentRoom)
 
 # Prudence card stops the time
 class PrudenceCard(StrengthCard):
@@ -519,44 +506,44 @@ class PrudenceCard(StrengthCard):
         super().__init__(19)
         self.timerMax = 5*60
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.stopTime()
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.stopTime()
             if self.levelup():
                 self.upgradeCard(4*60,-4*60)
             return True
         return False
 
-    def update(self, floor):
+    def update(self, dt, game):
         if self.timer == 1:
-            floor.stopTime()
-        super().update(floor)
+            game.stopTime()
+        super().update(dt, game)
     
-    def reset(self, floor):
-        super().reset(floor)
-        floor.stopTime()
+    def reset(self, game):
+        super().reset(game)
+        #game.stopTime()
 
 # Regulation card stop the pushing of the advert screens
 class RegulationCard(StrengthCard):
     def __init__(self):
         super().__init__(20)
 
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.advertBlockStart()
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.advertBlockStart()
             if self.levelup():
                 self.upgradeCard(5*60)
             return True
         return False
 
-    def update(self, floor):
+    def update(self, dt, game):
         if self.timer == 1:
-            floor.advertBlockEnd()
-        super().update(floor)
+            game.advertBlockEnd()
+        super().update(dt, game)
 
-    def reset(self,floor):
-        super().reset(floor)
-        floor.advertBlockEnd()
+    def reset(self,game):
+        super().reset(game)
+        #game.advertBlockEnd()
 
 # Appreciation card makes a new item appear somewhere in the room
 class AppreciationCard(StrengthCard):
@@ -565,10 +552,10 @@ class AppreciationCard(StrengthCard):
         self.timerMax = 1
 
     # Adds an item to room if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.addItem(math.floor(self.level)):
-                self.reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.addItem(math.floor(self.level)):
+                self.reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(0,-3*60)
@@ -582,9 +569,9 @@ class GratitudeCard(StrengthCard):
         self.timerMax = 60 # This card's timer means how long the speedboost lasts
 
     # Adds a stone to the ground if not on cooldown
-    def tryActivate(self, floor):
+    def tryActivate(self, game):
         if not self.cooldown:
-            floor.addStone()
+            game.addStone()
             self.cooldown = self.cooldownMax
             self.unpress()
             if self.levelup():
@@ -593,23 +580,23 @@ class GratitudeCard(StrengthCard):
         return False
 
     # Fill boost timer if player is standing on a stone
-    def update(self, floor):
-        for stn in floor.currentRoom.stones:
-            if floor.player.rect.colliderect(stn[1]): # Check collision with all the stones
+    def update(self, dt, game):
+        for stn in game.currentRoom.stones:
+            if game.player.rect.colliderect(stn[1]): # Check collision with all the stones
                 self.timer = self.timerMax
-                floor.player.changeSpeed(const.basePlayerSpeed*1.3, self.timerMax) # change speed upon collision
+                game.player.changeSpeed(const.basePlayerSpeed*1.3, self.timerMax) # change speed upon collision
                 break
         # Update both timers
-        if self.timer:
-            self.timer -= 1
-        if self.cooldown:
-            self.cooldown -= 1
+        if self.timer > 0:
+            self.timer = max(self.timer - dt, 0)
+        if self.cooldown > 0:
+            self.cooldown = max(self.cooldown - dt, 0)
         self.updateOverlay()
     
     # Reset player speed to normal
-    def reset(self, floor):
-        super().reset(floor)
-        floor.player.resetSpeed()
+    def reset(self, game):
+        super().reset(game)
+        #game.player.resetSpeed()
 
 # Hope card makes a long visible area in front of the player in the dark rooms
 class HopeCard(StrengthCard):
@@ -619,10 +606,10 @@ class HopeCard(StrengthCard):
         self.litWidth = -80
 
     # Makes the visible beam in front of the player if in a dark room
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.changeDarkness(self.litWidth, self.timerMax):
-                super().reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.changeDarkness(self.litWidth, self.timerMax):
+                super().reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(10*60)
@@ -630,11 +617,10 @@ class HopeCard(StrengthCard):
                 return True
         return False
 
-
     # Reset visible area and timers
-    def reset(self, floor):
-        super().reset(floor)
-        floor.currentRoom.resetLights()
+    def reset(self, game):
+        super().reset(game)
+        #game.currentRoom.resetLights()
 
 # Humor card makes player to be able to swim through water
 class HumorCard(StrengthCard):
@@ -643,18 +629,18 @@ class HumorCard(StrengthCard):
         self.timerMax = 5*60
 
     # Change player swimming speed if not on cooldown
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            floor.player.swim(const.basePlayerSpeed*0.5, self.timerMax)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            game.player.swim(const.basePlayerSpeed*0.5, self.timerMax)
             if self.levelup():
                 self.upgradeCard(3*60,-5*60)
             return True
         return False
 
     # Reset player swimming speed to normal (off)
-    def reset(self, floor):
-        super().reset(floor)
-        floor.player.resetSwim()
+    def reset(self, game):
+        super().reset(game)
+        #game.player.resetSwim()
 
 # Spirituality card makes the visible area around the player wider in the dark rooms
 class SpiritualityCard(StrengthCard):
@@ -664,10 +650,10 @@ class SpiritualityCard(StrengthCard):
         self.litWidth = 70
 
     # Makes the visible area around the player wider if in a dark room
-    def tryActivate(self, floor):
-        if super().tryActivate(floor):
-            if not floor.changeDarkness(self.litWidth, self.timerMax):
-                super().reset(floor)
+    def tryActivate(self, game):
+        if super().tryActivate(game):
+            if not game.changeDarkness(self.litWidth, self.timerMax):
+                super().reset(game)
             else:
                 if self.levelup():
                     self.upgradeCard(10*60)
@@ -676,9 +662,9 @@ class SpiritualityCard(StrengthCard):
         return False
 
     # Reset visible area and timers
-    def reset(self, floor):
-        super().reset(floor)
-        floor.currentRoom.resetLights()
+    def reset(self, game):
+        super().reset(game)
+        #game.currentRoom.resetLights()
     
 
 # Return a strength card respective to the given integer.

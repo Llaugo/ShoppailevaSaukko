@@ -88,8 +88,9 @@ class ShopperGame(Widget):
         if dt < 0.3: # Player can phase through walls if there's a spike in dt
             player.update(dt, self) # update player
             self.currentRoom.update(dt, player) # update room
-            self.shoppingList.update(dt)
-            self.strengthDeck.update(dt, self)
+            if self.gameActive:
+                self.shoppingList.update(dt)
+                self.strengthDeck.update(dt, self)
             # Check if player is standing on the lift
             if self.currentRoom.exit != None and player.collide_widget(self.currentRoom.exit):
                 self.ids.liftButton.opacity = 1 # Show floor exit button
@@ -214,6 +215,7 @@ class ShopperGame(Widget):
         self.gameActive = False
         self.ids.nextFloorButton.opacity = 1
         self.nextRoom("lift")
+        self.strengthDeck.reset(self)
 
     # Start the next floor/level
     def nextFloor(self):
@@ -221,6 +223,7 @@ class ShopperGame(Widget):
         self.floorNumber += 1
         self.ids.nextFloorButton.opacity = 0
         self.resetFloor()
+        self.strengthDeck.reset(self) # Reset selected cards
 
     # Clear current floor and create a new one
     def resetFloor(self):

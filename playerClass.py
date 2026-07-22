@@ -17,6 +17,7 @@ class Player(Widget):
         self.texture = self.sheet.getImage(0)
         self.facing = 0 # 0,1,2,3 = down,right,up,left
         self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
+        self.speedDuration = 0 # Duration of a possible speed boost
         self.flyDuration = 0
 
     # Update player
@@ -48,6 +49,7 @@ class Player(Widget):
         animationFrame = self.facing*4 + round(self.walking) % 4 # Get the correct image (frame of the animation)
         self.texture = self.sheet.getImage(animationFrame)
         self.resolveCollision(game.currentRoom)
+        self.updateTimers(dt)
 
     # Resolve possible collision with the world/room
     # Returns true if collision happened
@@ -77,7 +79,21 @@ class Player(Widget):
                     collided = True
         return collided
     
-
+    def updateTimers(self, dt):
+        self.speedDuration = max(self.speedDuration-dt, 0) # update speedboost timer
+        if not self.speedDuration: # Reset speed when timer runs out
+            self.resetSpeed()
+    
+    # Change player's speed
+    def changeSpeed(self, speed, duration):
+        if duration > self.speedDuration: # If new speed duration is longer than current, change speed
+            self.speed = speed
+            self.speedDuration = duration
+    
+    # Reset player speed to normal
+    def resetSpeed(self):
+        self.speed = const.basePlayerSpeed
+        self.speedDuration = 0
             
 
     '''

@@ -499,6 +499,21 @@
         #col_force_default: True
         row_default_height: 350*1.5
         col_default_width:  250*1.5
+    # Card activation button
+    Button:
+        id: activateButton
+        color: (0,0,0,1)
+        font_size: 53
+        text: app.tr("game.card_button")
+        border: 0,0,0,0
+        size_hint: None, None
+        size: 300, 300
+        pos: 3650, 845
+        disabled: not root.hasReadyCard
+        opacity: 1 if root.hasReadyCard else 0
+        background_normal: "images/buttons/itembutton0.png"
+        background_down:  "images/buttons/itembutton1.png"
+        on_release: root.activateCard()
 
         
     

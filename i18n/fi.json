@@ -73,6 +73,7 @@
     "game.item_button": "Poimi\nesine",
     "game.lift_button": "Hissiin",
     "game.floor_button": "Seuraava kerros",
+    "game.card_button": "Aktivoi\nkortti",
     "game.floor_label": "Kerros",
     "game.shopping_list": "Ostoslista",
     "game.found_item": "Löysit esineen: ",
