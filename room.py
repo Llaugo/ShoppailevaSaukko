@@ -24,9 +24,6 @@ class Room(FloatLayout):
         self.waters = []                        # watertiles in the room
         self.adverts = []                       # adverts in the room
 
-    #def on_kv_post(self, _):
-    #    pass
-
     # update everything in the room
     def update(self, dt, player):
         for row in self.layout:
@@ -138,3 +135,22 @@ class Room(FloatLayout):
         tile.makeWall()
         if tile not in self.walls:
             self.walls.append(tile)
+
+    def removeCrate(self, player):
+        broken = False
+        for row in self.layout:
+            for tile in row:
+                if player.doesReach(tile.crate):
+                    if tile.removeCrate():
+                        broken = True
+        self.updateCrates()
+        if broken:
+            return True
+        return False
+    
+    def updateCrates(self):
+        self.crates.clear()
+        for row in self.layout:
+            for tile in row:
+                if tile.hasCrate():
+                    self.crates.append(tile.crate)

@@ -8,6 +8,7 @@ from room import Room
 from door import Door
 from shoppingList import ShoppingList
 from strengthDeck import StrengthDeck
+import interactionRange
 import random
 
 # Class for the game (floors)
@@ -255,3 +256,9 @@ class ShopperGame(Widget):
         self.centerPlayer()
         # Set doors
         Clock.schedule_once(lambda dt: self.resetDoors(), 0)
+
+    def removeCrate(self):
+        if not self.currentRoom.removeCrate(self.player):
+            #self.player.speak(const.phrase[self.lang][46])
+            return False
+        return True

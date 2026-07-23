@@ -24,7 +24,7 @@ class StrengthCard(Widget):
         super().__init__(**kwargs)
 
         self.imageNum = imageNum
-        self.auraDist = 0
+        self.range = 0
         self.timerMax = 8       # timer duration in seconds
         self.cooldownMax = 30   # cooldown duration in seconds
         self.level = 1          # Level of the card
@@ -67,10 +67,10 @@ class StrengthCard(Widget):
             return True
         return False
     
-    def upgradeCard(self, timr=0, cool=0, aura=0):
+    def upgradeCard(self, timr=0, cool=0, range=0):
         self.timer += timr
         self.cooldown += cool
-        self.auraDist += aura
+        self.range += range
 
     # Do card action if card is active
     def update(self, dt, game):
@@ -122,7 +122,7 @@ class CreativityCard(StrengthCard):
         super().__init__(0)
         self.timerMax = 1
         self.cooldownMax = 60*60
-        self.auraDist = 184
+        self.range = 184
 
     def tryActivate(self, game):
         if super().tryActivate(game):
@@ -135,12 +135,12 @@ class CreativityCard(StrengthCard):
 class CuriosityCard(StrengthCard):
     def __init__(self):
         super().__init__(1)
-        self.timerMax = 1
-        self.auraDist = 80
+        self.timerMax = 0
+        self.range = 80
 
     def tryActivate(self, game):
         if super().tryActivate(game):
-            if not game.breakBox(self.auraDist):
+            if not game.removeCrate():
                 self.reset(game)
             else:
                 if self.levelup():
@@ -264,11 +264,11 @@ class HonestyCard(StrengthCard):
     def __init__(self):
         super().__init__(7)
         self.timerMax = 1
-        self.auraDist = const.tileSize*2
+        self.range = const.tileSize*2
 
     def tryActivate(self, game):
         if super().tryActivate(game):
-            if not game.rotateAdverts(self.auraDist):
+            if not game.rotateAdverts(self.range):
                 self.reset(game)
             else:
                 if self.levelup():
@@ -300,11 +300,11 @@ class GritCard(StrengthCard):
     def __init__(self):
         super().__init__(9)
         self.timerMax = 1
-        self.auraDist = const.tileSize
+        self.range = const.tileSize
 
     def tryActivate(self, game):
         if super().tryActivate(game):
-            if not game.destroyAdvert(self.auraDist):
+            if not game.destroyAdvert(self.range):
                 self.reset(game)
             else:
                 if self.levelup():
@@ -462,12 +462,12 @@ class ForgivenessCard(StrengthCard):
     def __init__(self):
         super().__init__(17)
         self.timerMax = 1
-        self.auraDist = const.tileSize
+        self.range = const.tileSize
 
     # Clean nearby water from the room if not on cooldown
     def tryActivate(self, game):
         if super().tryActivate(game):
-            if not game.cleanWater(self.auraDist):
+            if not game.cleanWater(self.range):
                 self.reset(game)
             else:
                 if self.levelup():

@@ -68,6 +68,8 @@ class Tile(Widget):
             self.crate = None
             self.tileType = 6
             self.updateImage()
+            return True
+        return False
 
     # Make this tile a wall
     def makeWall(self):
@@ -99,6 +101,12 @@ class Tile(Widget):
     # Returns True if this tile is an advert tile and False otherwise
     def isAdvert(self):
         if self.tileType == 7:
+            return True
+        else:
+            return False
+        
+    def hasCrate(self):
+        if self.crate is not None:
             return True
         else:
             return False

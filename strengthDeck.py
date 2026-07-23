@@ -48,11 +48,16 @@ class StrengthDeck(Widget):
 
     def update(self, dt, game):
         card4 = self.cards[4]
+        cardReady = False
         for i, card in enumerate(self.cards):
-            if card.ready and self.activate:
-                card.tryActivate(game)
-                self.activate = False
-                self.updateReadyStatus()
+            if card.ready:
+                if self.activate:
+                    card.tryActivate(game)
+                    self.activate = False
+                    self.updateReadyStatus()
+                elif card.range:
+                    game.player.updateRange(card.range)
+                    cardReady = True
             if card4.imageNum == 19 and card4.timer and i != 4: # If prudence is on, update only cooldown timers
                 if not card.timer:
                     card.updateCooldown(dt)
@@ -61,6 +66,8 @@ class StrengthDeck(Widget):
                 card.updateOverlay()
             else:
                 card.update(dt, game)
+        if not cardReady:
+            game.player.updateRange(0)
     
     def updateReadyStatus(self):
         self.hasReadyCard = any(card.ready for card in self.cards)

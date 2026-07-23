@@ -10,6 +10,7 @@ class Player(Widget):
     texture = ObjectProperty(None)  # holds a Texture
     speed  = NumericProperty(const.basePlayerSpeed) # player walking speed
     vis_pad = NumericProperty(const.playerPadding)
+    range = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -19,6 +20,9 @@ class Player(Widget):
         self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
         self.speedDuration = 0 # Duration of a possible speed boost
         self.flyDuration = 0
+
+    def updateRange(self, newRange):
+        self.range = newRange
 
     # Update player
     # Track movement and change image
@@ -95,6 +99,12 @@ class Player(Widget):
     def resetSpeed(self):
         self.speed = const.basePlayerSpeed
         self.speedDuration = 0
+
+    def doesReach(self, obj):
+        if obj is not None:
+            return self.ids.interactRange.collide_widget(obj)
+        else:
+            return False
             
 
     '''

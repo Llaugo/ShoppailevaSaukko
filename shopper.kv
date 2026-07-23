@@ -355,6 +355,7 @@
 <GameScreen>:
     ShopperGame:
         id: game
+
 # Player
 <Player>:
     size_hint: None, None
@@ -365,6 +366,22 @@
             pos: self.x - 1*self.vis_pad, self.y
             size: self.width + 2*self.vis_pad, self.height + 3*self.vis_pad
             texture: root.texture
+    InteractionRange:
+        id: interactRange
+        radius: root.range
+        center: self.width/2, self.height/2
+
+# Interaction range of the player
+<InteractionRange>:
+    size_hint: None, None
+    size: root.radius, root.radius
+    center: root.parent.center if root.parent else self.center
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 0.25
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 4
 
 # Tiles
 <Tile>:
