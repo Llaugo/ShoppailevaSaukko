@@ -12,6 +12,7 @@ class Tile(Widget):
     texture = ObjectProperty(None)  # holds a Texture
     tileType = NumericProperty(0)
     item = ObjectProperty(allownone=True, rebind=True)
+    crate = ObjectProperty(allownone=True, rebind=True)
 
     def __init__(self, tileType, roomDistance=0, **kwargs):
         super().__init__(**kwargs)
@@ -23,6 +24,14 @@ class Tile(Widget):
         self.texture = self.sheet.getImage(self.tileType)
         if self.isShelf() and const.itemProbability > random.random(): # Randomize if a shelf tile has an item or not
             self.addItem(self.roomDistance)
+        # Adding crates
+        if self.tileType == 5:
+            crate = Crate() # Generate new item
+            # Bind crate size and pos to tile size and pos to change reflexively with tile
+            self.bind(size=lambda *_: setattr(crate, "size", (self.size[0]*0.5, self.size[1]*0.5)))
+            self.bind(pos=lambda *_: setattr(crate, "pos", (self.pos[0] + 51, self.pos[1] + 18)))
+            self.add_widget(crate) # Add item image on top of tile
+            self.crate = crate
 
     def on_kv_post(self, _):
         #self.item = self.ids.item
@@ -51,6 +60,14 @@ class Tile(Widget):
         if self.item:
             self.remove_widget(self.item)
             self.item = None
+
+    # Delete any crate on tile
+    def removeCrate(self):
+        if self.crate:
+            self.remove_widget(self.crate)
+            self.crate = None
+            self.tileType = 6
+            self.updateImage()
 
     # Make this tile a wall
     def makeWall(self):
@@ -93,3 +110,6 @@ class Tile(Widget):
         else:
             return False
     """
+
+class Crate(Widget):
+    pass

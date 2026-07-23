@@ -20,6 +20,7 @@ class Room(FloatLayout):
         self.pushableCarts = []                 # carts that can be pushed
         self.walls = []                         # walls and solid objects of the room
         self.shelves = []                       # outside walls of the room
+        self.crates = []                        # Crates of the room
         self.waters = []                        # watertiles in the room
         self.adverts = []                       # adverts in the room
 
@@ -87,6 +88,7 @@ class Room(FloatLayout):
                         tile = Tile(random.randint(1,3)) # Floor
                     else:
                         tile = Tile(5) # Crate
+                        self.crates.append(tile.crate)
                 elif 50 <= c <= 53: # Cart
                     tile = Tile(random.randint(1,3))
                     #self.carts.append(cart.Cart(cartPos, randDir(c-50), self.lang, self.roomDistance))

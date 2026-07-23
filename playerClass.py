@@ -56,6 +56,7 @@ class Player(Widget):
     def resolveCollision(self, room: room.Room, preferDir=None):
         solids = room.walls.copy() # Add walls to solid objects
         solids += room.shelves.copy() # Add shelves to solid objects
+        solids += room.crates.copy() # Add crates to solid objects
         collided = False
         for solid in solids:                                # Check all the solid objects in the room
             if self.collide_widget(solid): # Check collision
