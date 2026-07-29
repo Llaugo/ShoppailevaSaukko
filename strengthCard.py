@@ -136,7 +136,7 @@ class CuriosityCard(StrengthCard):
     def __init__(self):
         super().__init__(1)
         self.timerMax = 0
-        self.range = 80
+        self.range = 120
 
     def tryActivate(self, game):
         if super().tryActivate(game):
