@@ -28,6 +28,8 @@ class StrengthDeck(Widget):
 
     # Override default method
     def on_touch_down(self, touch):
+        if self.disabled:
+            return super().on_touch_down(touch)
         # Only track touches inside the deck
         if self.collide_point(*touch.pos):
             # Check cards
@@ -78,3 +80,5 @@ class StrengthDeck(Widget):
     def reset(self, game):
         for card in self.cards:
             card.reset(game)
+        self.activate = False
+        self.updateReadyStatus()

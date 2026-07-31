@@ -30,7 +30,7 @@ npcWalkDur = 93     # Walking distances
 npcWalkSpeed = 1    # Walking speed
 
 # Card constants
-cardExp = 0.5       # Amount of experience gained when using a card
+cardExp = 0.1       # Amount of experience gained when using a card
 maxCardLevel = 3    # Maximum level that a strength card can get to
 
 # Probability constants

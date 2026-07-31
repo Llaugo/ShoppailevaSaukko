@@ -44,7 +44,9 @@ class StrengthCard(Widget):
         frame = 0
         if self.timer > 0:
             # Active/running animation: frames 5–8
-            frame = math.floor(self.timer/10) % 4 + 5
+            progress = (self.timerMax - self.timer)/self.timerMax
+            print(self.timer)
+            frame = math.floor(progress*64 % 4) + 5
         elif self.cooldown > 0:
             # Cooldown animation: frames 9–24
             progress = (self.cooldownMax - self.cooldown)/self.cooldownMax
@@ -68,8 +70,8 @@ class StrengthCard(Widget):
         return False
     
     def upgradeCard(self, timr=0, cool=0, range=0):
-        self.timer += timr
-        self.cooldown += cool
+        self.timerMax += timr
+        self.cooldownMax += cool
         self.range += range
 
     # Do card action if card is active
@@ -89,8 +91,9 @@ class StrengthCard(Widget):
             self.cooldown = max(self.cooldown - dt, 0)
 
     def levelup(self, amount=const.cardExp):
+        oldLevel = self.level
         self.level = min(self.level+amount, const.maxCardLevel)
-        if self.level == 2 or self.level == 3:
+        if self.level == 2 or (self.level == 3 and oldLevel != self.level):
             return True
         return False
 
@@ -483,22 +486,23 @@ class HumilityCard(StrengthCard):
     # Make player smaller if cooldown is not on
     def tryActivate(self, game):
         if super().tryActivate(game):
-            game.player.toggleSize(game.currentRoom, 0.5)
+            game.player.setSize(game.currentRoom, 0.5)
             if self.levelup():
-                self.upgradeCard(4*60,-4*60)
+                self.upgradeCard(4,-4)
             return True
         return False
 
     # Turn player size back to normal if timer is out
     def update(self, dt, game):
-        if self.timer == 1:
-            game.player.toggleSize(game.currentRoom)
+        oldTimer = self.timer
         super().update(dt, game)
+        if oldTimer > 0 and self.timer <= 0: # Timer just ended
+            game.player.setSize(game.currentRoom)
 
     # Reset size to normal
     def reset(self, game):
         super().reset(game)
-        #game.player.toggleSize(game.currentRoom)
+        game.player.setSize(game.currentRoom)
 
 # Prudence card stops the time
 class PrudenceCard(StrengthCard):

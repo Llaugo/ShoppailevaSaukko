@@ -20,6 +20,8 @@ class Player(Widget):
         self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
         self.speedDuration = 0 # Duration of a possible speed boost
         self.flyDuration = 0
+        self._normalSize = None
+        self._normalVisPad = None
 
     def updateRange(self, newRange):
         self.range = newRange
@@ -105,7 +107,23 @@ class Player(Widget):
             return self.ids.interactRange.collide_widget(obj)
         else:
             return False
-            
+
+    # Sets the player size
+    def setSize(self, room, newScale=1):
+        if newScale <= 0:
+            raise ValueError("Player scale must be greater than zero")
+        # The widget is the player's hitbox, not the 36x41 sprite-sheet frame.
+        # Capture its normal in-game size lazily because ShopperGame sizes it
+        # after the Player has been constructed.
+        if self._normalSize is None:
+            self._normalSize = tuple(self.size)
+            self._normalVisPad = self.vis_pad
+        oldCenter = tuple(self.center)
+        self.size = (self._normalSize[0]*newScale, self._normalSize[1]*newScale,)
+        self.vis_pad = self._normalVisPad*newScale
+        self.center = oldCenter
+        self.resolveCollision(room) # Resolve any collisions from changing the size
+
 
     '''
     # controls: Consists of four control buttons (d,r,u,l) of the Button class

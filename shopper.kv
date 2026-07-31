@@ -584,6 +584,7 @@
             id: strengthDeck
             size: 900, 1700
             center: 500, 950
+            disabled: not root.gameActive
         # Item button
         Button:
             id: itemButton
@@ -653,5 +654,4 @@
             background_normal: "images/buttons/longbutton0.png"
             background_down:  "images/buttons/longbutton1.png"
             on_release: root.nextFloor()
-
 
