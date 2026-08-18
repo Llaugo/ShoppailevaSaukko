@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68", "wheel>=0.41"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shoppaileva-saukko"
+version = "0.1.0"
+description = "A tile-based shopping adventure built with Python and Kivy"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "Lauri Karanko" },
+]
+dependencies = [
+    "Kivy>=2.3,<3",
+]
+
+[tool.setuptools]
+py-modules = [
+    "const",
+    "door",
+    "game",
+    "interactionRange",
+    "item",
+    "main",
+    "playerClass",
+    "room",
+    "shoppingList",
+    "spriteSheet",
+    "strengthCard",
+    "strengthDeck",
+    "strengthMenu",
+    "tile",
+    "utils",
+]

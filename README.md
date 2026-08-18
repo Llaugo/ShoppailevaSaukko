@@ -55,7 +55,7 @@ The interface is designed to support both mouse and touch input. The finished pr
 ### Requirements
 
 - Python 3.9 or newer
-- Kivy 2.x
+- Kivy 2.3.x
 
 Kivy publishes platform-specific installation notes in its
 [official installation guide](https://kivy.org/doc/stable/gettingstarted/installation.html).
@@ -69,7 +69,7 @@ virtual environment:
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install "kivy>=2.0,<3"
+python -m pip install -e .
 python main.py
 ```
 
@@ -82,6 +82,12 @@ On Windows PowerShell, activate the environment with:
 Run the game from the repository root because its images, fonts, translations,
 and room layouts are loaded using relative paths.
 
+Run the dependency-free content and source checks with:
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
 ## Current development status
 
 The current Kivy version includes:
@@ -92,7 +98,7 @@ The current Kivy version includes:
 - Animated movement, collision detection, and room-to-room travel
 - Distance-based item rarity and shopping-list progress
 - Five-minute floor timers and lift-based floor transitions
-- Initial playable card effects, including Curiosity and Zest
+- Initial playable card effects: Curiosity, Zest, and Humility
 - Responsive scaling from a `4000 × 2000` design canvas
 
 Still in progress:
@@ -103,7 +109,7 @@ Still in progress:
 - Most NPC, cart, water, darkness, and advertisement interactions
 - Several strength-card effects that still reference systems from the earlier Pygame implementation
 - Complete localization: Finnish is the only populated language; English is partial and Swedish is currently empty
-- Automated tests and packaged releases
+- Automated gameplay tests and packaged releases
 - Possible additions include also: tutorial level, achievements
 
 The application currently starts in Finnish. Change `lang = "fi"` in
@@ -126,10 +132,16 @@ The application currently starts in Finnish. Change `lang = "fi"` in
 | `i18n/` | JSON translation files |
 | `images/` | Sprites, cards, interface art, and sprite sheets |
 | `fonts/` | Bundled Courier Prime font files and their license |
+| `AGENTS.md` | Working rules and verification requirements for Codex |
+| `ROADMAP.md` | Ordered milestones with acceptance criteria |
+| `docs/` | Architecture, game-design, porting, content, testing, and decision records |
+| `tests/` | Headless source and content-contract checks |
+| `pyproject.toml` | Python/Kivy dependency and project metadata |
 
-Room layouts use numeric tile codes. The mapping is documented in `const.py`;
-for example, `0` is a wall, `1` is a floor, `2` is a shelf, `3` is a lift,
-`4` is a crate, and `7` is water.
+Room layouts use numeric tile codes. The complete current mapping is documented
+in [`docs/CONTENT_FORMATS.md`](docs/CONTENT_FORMATS.md); for example, `0` is a
+wall, `1` is a floor, `2` is a shelf, `3` is a lift, `4` is a crate, and `7` is
+water.
 
 ## Tuning and adding content
 
@@ -144,6 +156,26 @@ Translations use dot-separated keys in `i18n/*.json`. When adding a new
 language, create its JSON file and use the filename (without `.json`) as the
 application language code.
 
+## Development documentation
+
+Before making a gameplay change, read [`AGENTS.md`](AGENTS.md) and the relevant
+document under [`docs/`](docs/):
+
+- [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) describes current Kivy ownership and
+  runtime flow.
+- [`GAME_DESIGN.md`](docs/GAME_DESIGN.md) separates confirmed behavior, legacy
+  intent, and open product decisions.
+- [`PORTING_STATUS.md`](docs/PORTING_STATUS.md) tracks the Kivy status of core
+  systems and all 26 strength cards.
+- [`CONTENT_FORMATS.md`](docs/CONTENT_FORMATS.md) defines room, translation,
+  card, item, and sprite-sheet contracts.
+- [`TESTING.md`](docs/TESTING.md) contains automated and manual verification.
+
+The earlier Pygame implementation is available at
+[`Llaugo/VahvuusVaris`](https://github.com/Llaugo/VahvuusVaris). It is useful as
+a behavior and design reference, but the Kivy code and accepted decision records
+are authoritative for the current runtime.
+
 ## Credits and licensing
 
 The code is written and all images and textures have been created by Lauri. 
@@ -151,4 +183,3 @@ The concept and the game design has been worked on by both Lauri and Heidi.
 
 The bundled Courier Prime font is distributed under the SIL Open Font License;
 see [`fonts/Courier_Prime/OFL.txt`](fonts/Courier_Prime/OFL.txt).
-

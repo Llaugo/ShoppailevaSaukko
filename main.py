@@ -18,7 +18,7 @@ LabelBase.register(
     fn_regular="fonts/Courier_Prime/CourierPrime-Regular.ttf",
     fn_bold="fonts/Courier_Prime/CourierPrime-Bold.ttf",
     fn_italic="fonts/Courier_Prime/CourierPrime-Italic.ttf",
-    fn_bolditalic="fonts/Courier_Prime/CourierPrime-Bolditalic.ttf",
+    fn_bolditalic="fonts/Courier_Prime/CourierPrime-BoldItalic.ttf",
 )
 
 class GameScreen(Screen):

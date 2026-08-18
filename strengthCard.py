@@ -45,7 +45,6 @@ class StrengthCard(Widget):
         if self.timer > 0:
             # Active/running animation: frames 5–8
             progress = (self.timerMax - self.timer)/self.timerMax
-            print(self.timer)
             frame = math.floor(progress*64 % 4) + 5
         elif self.cooldown > 0:
             # Cooldown animation: frames 9–24

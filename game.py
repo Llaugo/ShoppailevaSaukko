@@ -106,7 +106,8 @@ class ShopperGame(Widget):
             self.ids.itemButton.opacity = onItem
             # Check room exiting
             self.checkRoomExit()
-        self.timer = max(self.timer - dt, 0) # update timer
+        if self.gameActive:
+            self.timer = max(self.timer - dt, 0) # update timer
 
     # Check player collision with all the four doors
     def checkRoomExit(self):
