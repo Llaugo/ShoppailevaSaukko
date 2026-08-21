@@ -16,6 +16,7 @@ flowchart TD
     F --> G["Room"]
     G --> H["Tile"]
     H --> I["Item / Crate"]
+    G --> N["NavigationStone"]
     F --> J["Player"]
     F --> K["ShoppingList"]
     F --> L["StrengthDeck"]
@@ -38,7 +39,7 @@ seconds to the player, current room, shopping list, and strength deck.
 | Screen lifecycle | `main.GameScreen` and `ScreenManager` | `shopper.kv` |
 | Run and floor state | `game.ShopperGame` | room, player, list, deck |
 | Player input/effects/collision | `playerClass.Player` | `ShopperGame.pressed`, `Room` |
-| Room decoding and local collections | `room.Room` | `Tile`, `Item`, `Crate` |
+| Room decoding and local collections | `room.Room` | `Tile`, `Item`, `Crate`, `NavigationStone` |
 | Tile rendering and item spawning | `tile.Tile` | `SpriteSheet`, `Item` |
 | Shopping goal and feedback | `shoppingList.ShoppingList` | `const.shop`, translations |
 | Card selection before a run | `strengthMenu.StrengthMenu` | card images, translations |
@@ -98,9 +99,11 @@ runtime `Tile` frames and records room-local collections such as walls, shelves,
 items, crates, water, NPCs, carts, and adverts.
 
 Tiles own optional item and crate widgets. A shelf may create an `Item` during
-construction. `Room` mirrors those child objects in lists used by update,
-collision, and interaction code. Whenever a child is added or removed, both the
-widget tree and the corresponding room collection must remain synchronized.
+construction. Gratitude-card navigation stones are direct room children so they
+remain attached when an existing room is revisited. `Room` mirrors these child
+objects in lists used by update, collision, and interaction code. Whenever a
+child is added or removed, both the widget tree and the corresponding room
+collection must remain synchronized.
 
 See `CONTENT_FORMATS.md` for the raw-code contract and currently dormant marker
 types.
@@ -125,6 +128,11 @@ moves the player to the opposite edge, and schedules recentering after Kivy has
 updated layout. A floor escape swaps to a special 5 x 5 lift room and resets
 the strength deck. `nextFloor` increments the floor number, regenerates the
 matrix, and resets the deck again.
+
+Player speed effects are keyed by their source and count down independently.
+The strongest active speed wins, which prevents a Gratitude stone from
+downgrading Zest while allowing the remaining Gratitude boost to resume after
+Zest expires.
 
 Temporary effects must define behavior for four boundaries:
 
@@ -167,7 +175,7 @@ complete experience.
   latter is inside a string literal.
 - Most card classes still reference missing Pygame-era floor/player APIs.
 - Timer values and exact-value expiry checks are only partly converted.
-- Cart, NPC, advert, darkness, water, and stone state are not yet converted from the pygame-era.
+- Cart, NPC, advert, darkness, and water state are not yet converted from the pygame-era.
 - `ShopperGame` and `GameScreen` both bind keyboard events.
 - Production start layouts are bypassed by a test layout.
 - The UI contains destinations that do not have a working screen or flow.

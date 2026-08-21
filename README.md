@@ -98,7 +98,7 @@ The current Kivy version includes:
 - Animated movement, collision detection, and room-to-room travel
 - Distance-based item rarity and shopping-list progress
 - Five-minute floor timers and lift-based floor transitions
-- Initial playable card effects: Curiosity, Zest, and Humility
+- Initial playable card effects: Curiosity, Zest, Humility, and Gratitude
 - Responsive scaling from a `4000 × 2000` design canvas
 
 Still in progress:
@@ -122,11 +122,11 @@ The application currently starts in Finnish. Change `lang = "fi"` in
 | `main.py` | Application entry point, screen management, and localization |
 | `shopper.kv` | Kivy interface definitions and screen layouts |
 | `game.py` | Main game loop, floor generation, room travel, and interactions |
-| `playerClass.py` | Player movement, animation, collision, and temporary effects |
-| `room.py`, `tile.py` | Room construction and tile behavior |
+| `playerClass.py`, `speedEffects.py` | Player movement, collision, and temporary effects |
+| `room.py`, `tile.py`, `navigationStone.py` | Room construction and room-local objects |
 | `shoppingList.py`, `item.py` | Shopping-list progress, item rarity, and item animation |
 | `strengthMenu.py` | Pre-game strength-card selection |
-| `strengthDeck.py`, `strengthCard.py` | In-game card deck and the 26 card classes |
+| `strengthDeck.py`, `strengthCard.py`, `cardProgression.py` | Card behavior and progression |
 | `const.py` | Gameplay tuning values, item pools, and loaded room layouts |
 | `rooms/` | CSV room-layout data |
 | `i18n/` | JSON translation files |

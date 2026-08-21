@@ -302,6 +302,11 @@ class AssetContracts(unittest.TestCase):
                 self.assertEqual(height, frame_size[1])
                 self.assertEqual(width, frame_size[0] * frame_count)
 
+    def test_navigation_stone_art_size_matches_its_widget_bounds(self) -> None:
+        tree = ast.parse((ROOT / "navigationStone.py").read_text(encoding="utf-8"))
+        art_size = literal_assignment(tree, "STONE_ART_SIZE")
+        self.assertEqual(png_dimensions(IMAGES / "stone.png"), art_size)
+
 
 if __name__ == "__main__":
     unittest.main()

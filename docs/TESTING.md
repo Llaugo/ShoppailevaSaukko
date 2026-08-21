@@ -16,6 +16,8 @@ The suite checks:
 - Finnish contains every statically referenced and card-generated key;
 - non-empty locale files are valid JSON objects;
 - card IDs, classes, categories, and card images stay aligned;
+- card-level thresholds remain float-safe;
+- source-keyed timed speed effects compose, refresh, and expire;
 - referenced static assets exist with exact case;
 - sprite sheets retain their frame geometry;
 - item rarity tables remain valid cumulative distributions;
@@ -63,11 +65,14 @@ items, cards, or floor transitions.
 10. Curiosity removes a reachable crate and handles no-target activation.
 11. Zest increases speed and returns it to normal after expiry/reset.
 12. Humility changes both visible size and hitbox, then restores both.
-13. Standing on the lift shows the lift button; floor transition does not leave
+13. Gratitude drops one visible stone with matching visual/trigger bounds,
+    rejects an overlapping duplicate without a cooldown, preserves stones when
+    revisiting a room, and applies the expected boost without overriding Zest.
+14. Standing on the lift shows the lift button; floor transition does not leave
     a selected, active, or cooldown overlay in an invalid state.
-14. Resize the window to 1000 x 500 and at least one non-2:1 shape. The world,
+15. Resize the window to 1000 x 500 and at least one non-2:1 shape. The world,
     buttons, cards, and text remain reachable.
-15. Leave and re-enter the game screen once. Input is not duplicated and only
+16. Leave and re-enter the game screen once. Input is not duplicated and only
     one update loop is active.
 
 Current known incomplete flows—Continue, settings, information, timeout,
@@ -93,4 +98,3 @@ For a timed card or player effect, record at least:
 Prefer fixed random seeds for non-visual logic. Do not make tests depend on the
 specific random room or item chosen unless randomness is the subject of the
 test.
-

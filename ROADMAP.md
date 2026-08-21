@@ -46,7 +46,7 @@ return to the menu without an exception or leaked scheduled callback.
 - [ ] Port advert direction, pushing, rotation, destruction, and blocking
 - [ ] Port room item-name reveal and item creation
 - [ ] Port jump/teleport with collision-safe landing
-- [ ] Port navigation stones without Pygame rectangle dependencies
+- [x] Port navigation stones without Pygame rectangle dependencies
 - [ ] Complete the cards that depend only on these environment systems
 
 Done when environment markers in all production room layouts have visible,

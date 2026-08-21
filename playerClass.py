@@ -5,6 +5,7 @@ import math
 import const
 import utils
 import room
+from speedEffects import TimedSpeedEffects
 
 class Player(Widget):
     texture = ObjectProperty(None)  # holds a Texture
@@ -18,7 +19,7 @@ class Player(Widget):
         self.texture = self.sheet.getImage(0)
         self.facing = 0 # 0,1,2,3 = down,right,up,left
         self.walking = 0 # When rounded 0 = standing, 1,2,3 = walking (Animation helper)
-        self.speedDuration = 0 # Duration of a possible speed boost
+        self.speedEffects = TimedSpeedEffects(const.basePlayerSpeed)
         self.flyDuration = 0
         self._normalSize = None
         self._normalVisPad = None
@@ -87,20 +88,21 @@ class Player(Widget):
         return collided
     
     def updateTimers(self, dt):
-        self.speedDuration = max(self.speedDuration-dt, 0) # update speedboost timer
-        if not self.speedDuration: # Reset speed when timer runs out
-            self.resetSpeed()
+        self.speedEffects.update(dt)
+        self.speed = self.speedEffects.speed
     
     # Change player's speed
-    def changeSpeed(self, speed, duration):
-        if duration > self.speedDuration: # If new speed duration is longer than current, change speed
-            self.speed = speed
-            self.speedDuration = duration
+    def changeSpeed(self, speed, duration, source="temporary"):
+        self.speedEffects.setEffect(source, speed, duration)
+        self.speed = self.speedEffects.speed
     
     # Reset player speed to normal
-    def resetSpeed(self):
-        self.speed = const.basePlayerSpeed
-        self.speedDuration = 0
+    def resetSpeed(self, source=None):
+        if source is None:
+            self.speedEffects.clear()
+        else:
+            self.speedEffects.clearEffect(source)
+        self.speed = self.speedEffects.speed
 
     def doesReach(self, obj):
         if obj is not None:

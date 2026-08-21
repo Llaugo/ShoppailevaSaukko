@@ -146,6 +146,30 @@ Every card implementation must specify:
 
 See `PORTING_STATUS.md` for the per-card inventory.
 
+### Gratitude card (ID 22)
+
+**Current and intended:** Activating Gratitude in an active floor room drops one
+non-solid navigation stone at the player's position. Dropping a stone while the
+player already overlaps another stone fails without consuming cooldown or
+experience. Each successful placement grants the normal card experience and
+starts the placement cooldown.
+
+Stones belong to the room in which they were placed. They remain visible when
+the room is revisited during the same floor and are discarded with the floor.
+Their trigger bounds match their visible image bounds.
+
+Touching a stone while Gratitude is in the active deck refreshes a 30 percent
+speed boost. The boost and placement cooldown count down independently, and an
+existing boost may finish across a normal room transition. Floor, deck, and
+screen resets clear the boost. Simultaneous speed boosts do not multiply; the
+strongest active boost determines player speed.
+
+| Card level | Stone boost | Placement cooldown |
+| ---: | ---: | ---: |
+| 1 | 1.0 seconds | 30 seconds |
+| 2 | 1.5 seconds | 25 seconds |
+| 3 | 2.0 seconds | 20 seconds |
+
 ## Obstacles and interactions
 
 | System | Intended role | Current Kivy state |

@@ -6,6 +6,7 @@ from kivy.properties import NumericProperty, ObjectProperty, BooleanProperty
 import const
 from spriteSheet import SpriteSheet
 import playerClass
+from cardProgression import advanceCardLevel
 import math
 
 # Class for strength cards. There is a parent class and 26 child classes, one each strength.
@@ -90,11 +91,12 @@ class StrengthCard(Widget):
             self.cooldown = max(self.cooldown - dt, 0)
 
     def levelup(self, amount=const.cardExp):
-        oldLevel = self.level
-        self.level = min(self.level+amount, const.maxCardLevel)
-        if self.level == 2 or (self.level == 3 and oldLevel != self.level):
-            return True
-        return False
+        self.level, leveledUp = advanceCardLevel(
+            self.level,
+            amount,
+            const.maxCardLevel,
+        )
+        return leveledUp
 
     # Reset the card timers to the base state
     def reset(self, game):
@@ -286,7 +288,11 @@ class ZestCard(StrengthCard):
     # Change players speed if not on cooldown
     def tryActivate(self, game):
         if super().tryActivate(game):
-            game.player.changeSpeed(const.basePlayerSpeed*1.5, self.timerMax)
+            game.player.changeSpeed(
+                const.basePlayerSpeed*1.5,
+                self.timerMax,
+                source="zest",
+            )
             if self.levelup():
                 self.upgradeCard(5)
             return True
@@ -295,7 +301,7 @@ class ZestCard(StrengthCard):
     # Reset player speed to normal
     def reset(self, game):
         super().reset(game)
-        game.player.resetSpeed()
+        game.player.resetSpeed("zest")
 
 # Grit card destroys advert in front of the player
 class GritCard(StrengthCard):
@@ -569,37 +575,37 @@ class AppreciationCard(StrengthCard):
 class GratitudeCard(StrengthCard):
     def __init__(self):
         super().__init__(22)
-        self.timerMax = 60 # This card's timer means how long the speedboost lasts
+        self.timerMax = 1 # This card's timer means how long the speed boost lasts
 
     # Adds a stone to the ground if not on cooldown
     def tryActivate(self, game):
-        if not self.cooldown:
-            game.addStone()
-            self.cooldown = self.cooldownMax
-            self.unpress()
-            if self.levelup():
-                self.upgradeCard(30,-5*60)
-            return True
-        return False
+        if self.cooldown or not game.addStone():
+            return False
+        if self.levelup():
+            self.upgradeCard(0.5, -5)
+        self.cooldown = self.cooldownMax
+        self.unpress()
+        return True
 
     # Fill boost timer if player is standing on a stone
     def update(self, dt, game):
-        for stn in game.currentRoom.stones:
-            if game.player.rect.colliderect(stn[1]): # Check collision with all the stones
-                self.timer = self.timerMax
-                game.player.changeSpeed(const.basePlayerSpeed*1.3, self.timerMax) # change speed upon collision
-                break
-        # Update both timers
         if self.timer > 0:
             self.timer = max(self.timer - dt, 0)
         if self.cooldown > 0:
             self.cooldown = max(self.cooldown - dt, 0)
+        if game.playerIsOnStone():
+            self.timer = self.timerMax
+            game.player.changeSpeed(
+                const.basePlayerSpeed*1.3,
+                self.timerMax,
+                source="gratitude",
+            )
         self.updateOverlay()
     
     # Reset player speed to normal
     def reset(self, game):
         super().reset(game)
-        #game.player.resetSpeed()
+        game.player.resetSpeed("gratitude")
 
 # Hope card makes a long visible area in front of the player in the dark rooms
 class HopeCard(StrengthCard):

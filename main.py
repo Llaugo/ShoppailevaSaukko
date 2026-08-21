@@ -32,6 +32,7 @@ class GameScreen(Screen):
         g = self.ids.game
         Window.unbind(on_key_down=self._kd, on_key_up=self._ku)
         Clock.unschedule(g.update)
+        g.resetTemporaryEffects()
 
 class MenuScreen(Screen):
     pass

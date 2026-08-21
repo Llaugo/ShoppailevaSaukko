@@ -125,6 +125,25 @@ class ShopperGame(Widget):
                 self.currentRoom.removeItem(item)
                 break
 
+    def addStone(self):
+        if not self.gameActive or self.currentRoom is None:
+            return False
+        if self.currentRoom.playerIsOnStone(self.player):
+            return False
+        self.currentRoom.addStone(self.player.center)
+        return True
+
+    def playerIsOnStone(self):
+        if self.currentRoom is None:
+            return False
+        return self.currentRoom.playerIsOnStone(self.player)
+
+    def resetTemporaryEffects(self):
+        if self.strengthDeck is not None:
+            self.strengthDeck.reset(self)
+        if self.player is not None:
+            self.player.resetSpeed()
+
     # Go to next room in the given direction
     # dir: direction of the next room (0=d,1=r,2=u,3=l)
     def nextRoom(self, dir):
@@ -217,7 +236,7 @@ class ShopperGame(Widget):
         self.gameActive = False
         self.ids.nextFloorButton.opacity = 1
         self.nextRoom("lift")
-        self.strengthDeck.reset(self)
+        self.resetTemporaryEffects()
 
     # Start the next floor/level
     def nextFloor(self):
@@ -225,7 +244,7 @@ class ShopperGame(Widget):
         self.floorNumber += 1
         self.ids.nextFloorButton.opacity = 0
         self.resetFloor()
-        self.strengthDeck.reset(self) # Reset selected cards
+        self.resetTemporaryEffects()
 
     # Clear current floor and create a new one
     def resetFloor(self):

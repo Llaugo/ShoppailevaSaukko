@@ -17,16 +17,19 @@ dependencies = [
 
 [tool.setuptools]
 py-modules = [
+    "cardProgression",
     "const",
     "door",
     "game",
     "interactionRange",
     "item",
     "main",
+    "navigationStone",
     "playerClass",
     "room",
     "shoppingList",
     "spriteSheet",
+    "speedEffects",
     "strengthCard",
     "strengthDeck",
     "strengthMenu",

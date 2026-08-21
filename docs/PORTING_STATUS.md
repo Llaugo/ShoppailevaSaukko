@@ -1,6 +1,6 @@
 # Kivy porting status
 
-Last reviewed: 2026-08-11
+Last reviewed: 2026-08-18
 
 The current repository is a Kivy rewrite of
 <https://github.com/Llaugo/VahvuusVaris>. The legacy project is a behavioral
@@ -43,7 +43,7 @@ may still exist but calls an API that does not exist in the live Kivy objects.
 | Carts | Not ported | Encoded layout markers become floor | Entity, collision, owner, weight/push rules |
 | NPC shoppers | Not ported | Encoded layout markers become floor | Entity, movement, collision, targeting |
 | Trade | Not ported | Legacy design and unused art | Data transaction and Kivy UI |
-| Navigation stones | Not ported | Legacy card code references Pygame rects | Kivy widget/state and room persistence |
+| Navigation stones | Playable | Room-owned Kivy widgets using `images/stone.png` | Verify exact-size trigger during manual play |
 | Bird's-eye view | Not ported | Legacy implementation only | Kivy multi-room view and darkness policy |
 
 ## Strength cards
@@ -75,7 +75,7 @@ their required API in the live Kivy `ShopperGame`, `Player`, and `Room` classes.
 | 19 | `PrudenceCard` | Temperance | Not ported | pause domains, `stopTime`, float-safe expiry |
 | 20 | `RegulationCard` | Temperance | Not ported | advert pushing/block state and expiry |
 | 21 | `AppreciationCard` | Spirituality | Not ported | room-level item creation and full-shelf failure |
-| 22 | `GratitudeCard` | Spirituality | Not ported | stones; replace Pygame `rect.colliderect` use |
+| 22 | `GratitudeCard` | Spirituality | Playable | Verify room persistence, level tuning, and Zest overlap |
 | 23 | `HopeCard` | Spirituality | Not ported | directional darkness beam and reset |
 | 24 | `HumorCard` | Spirituality | Not ported | water collision and `Player.swim` |
 | 25 | `SpiritualityCard` | Spirituality | Not ported | radial darkness light and reset |

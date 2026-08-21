@@ -4,6 +4,7 @@ from kivy.properties import NumericProperty
 import random
 from tile import Tile
 from door import Door
+from navigationStone import NavigationStone
 import const
 
 class Room(FloatLayout):
@@ -23,6 +24,7 @@ class Room(FloatLayout):
         self.crates = []                        # Crates of the room
         self.waters = []                        # watertiles in the room
         self.adverts = []                       # adverts in the room
+        self.stones = []                        # Gratitude-card navigation stones
 
     # update everything in the room
     def update(self, dt, player):
@@ -38,6 +40,22 @@ class Room(FloatLayout):
                     tile.removeItem() # Remove from the tile
                     break
         self.items.remove(item) # Remove from the item list
+
+    def addStone(self, center):
+        stone = NavigationStone()
+        artScale = self.tileSize / const.tileSize
+        stone.size = (
+            NavigationStone.artSize[0] * artScale,
+            NavigationStone.artSize[1] * artScale,
+        )
+        # The widget bounds are intentionally both the art and trigger hitbox.
+        stone.center = center
+        self.add_widget(stone)
+        self.stones.append(stone)
+        return stone
+
+    def playerIsOnStone(self, player):
+        return any(player.collide_widget(stone) for stone in self.stones)
 
     # Initialize the room from the given layout
     def setRoom(self, layout, roomDist=0):
@@ -108,6 +126,10 @@ class Room(FloatLayout):
                 self.layout[i][j] = tile
 
     def clearState(self):
+        for stone in self.stones:
+            if stone.parent is self:
+                self.remove_widget(stone)
+        self.stones.clear()
         self.exit = None
         self.items.clear()
         self.carts.clear()
