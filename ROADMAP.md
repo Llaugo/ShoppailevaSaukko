@@ -44,7 +44,8 @@ return to the menu without an exception or leaked scheduled callback.
 - [ ] Port water collision and swimming
 - [ ] Port darkness and temporary/permanent light effects
 - [ ] Port advert direction, pushing, rotation, destruction, and blocking
-- [ ] Port room item-name reveal and item creation
+- [ ] Port room item-name reveal
+- [x] Port room item creation
 - [ ] Port jump/teleport with collision-safe landing
 - [x] Port navigation stones without Pygame rectangle dependencies
 - [ ] Complete the cards that depend only on these environment systems
@@ -96,4 +97,3 @@ supported platform.
 - Achievements
 - Balance telemetry and seeded run replay
 - Additional room sets, items, and card progression content
-

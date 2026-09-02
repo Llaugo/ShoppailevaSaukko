@@ -286,6 +286,38 @@ class CardAndItemContracts(unittest.TestCase):
         )
         self.assertIs(ast.literal_eval(setting.value), False)
 
+    def test_appreciation_uses_instant_timing_and_seconds_for_its_upgrade(self) -> None:
+        tree = ast.parse((ROOT / "strengthCard.py").read_text(encoding="utf-8"))
+        appreciation = next(
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "AppreciationCard"
+        )
+        initializer = next(
+            node
+            for node in appreciation.body
+            if isinstance(node, ast.FunctionDef) and node.name == "__init__"
+        )
+        timerSetting = next(
+            node
+            for node in initializer.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Attribute) and target.attr == "timerMax"
+                for target in node.targets
+            )
+        )
+        self.assertEqual(ast.literal_eval(timerSetting.value), 0)
+
+        upgrade = next(
+            node
+            for node in ast.walk(appreciation)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "upgradeCard"
+        )
+        self.assertEqual([ast.literal_eval(argument) for argument in upgrade.args], [0, -3])
+
     def test_item_rarity_is_cumulative_and_covers_floor_distance(self) -> None:
         tree = ast.parse((ROOT / "const.py").read_text(encoding="utf-8"))
         distributions = literal_assignment(tree, "itemRarity")

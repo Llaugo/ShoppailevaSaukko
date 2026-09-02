@@ -98,7 +98,7 @@ The current Kivy version includes:
 - Animated movement, collision detection, and room-to-room travel
 - Distance-based item rarity and shopping-list progress
 - Five-minute floor timers and lift-based floor transitions
-- Initial playable card effects: Curiosity, Zest, Humility, and Gratitude
+- Initial playable card effects: Curiosity, Zest, Humility, Appreciation, and Gratitude
 - Responsive scaling from a `4000 × 2000` design canvas
 
 Still in progress:

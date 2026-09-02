@@ -5,6 +5,7 @@ import random
 from tile import Tile
 from door import Door
 from navigationStone import NavigationStone
+from itemLogic import chooseEmptyShelf, itemDistanceWithBonus
 import const
 
 class Room(FloatLayout):
@@ -13,6 +14,7 @@ class Room(FloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.layout = None # Each tile object in a grid
+        self.roomDistance = 0                  # Distance from the floor's starting room
         self.exit = None                        # Possible lift tile in the room
         self.items = []                         # items in the room
         self.carts = []                         # carts in the room
@@ -41,6 +43,20 @@ class Room(FloatLayout):
                     break
         self.items.remove(item) # Remove from the item list
 
+    def addItem(self, rarityBonus):
+        shelf = chooseEmptyShelf(self.shelves)
+        if shelf is None:
+            return None
+        itemDistance = itemDistanceWithBonus(
+            self.roomDistance,
+            rarityBonus,
+            const.roomDistMax,
+        )
+        newItem = shelf.addItem(itemDistance)
+        if newItem is not None:
+            self.items.append(newItem)
+        return newItem
+
     def addStone(self, center):
         stone = NavigationStone()
         artScale = self.tileSize / const.tileSize
@@ -60,6 +76,7 @@ class Room(FloatLayout):
     # Initialize the room from the given layout
     def setRoom(self, layout, roomDist=0):
         org_layout = layout
+        self.roomDistance = roomDist
         g = self.ids.grid
         g.clear_widgets() # Clear possible old layout
         self.clearState()

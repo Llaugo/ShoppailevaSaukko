@@ -49,10 +49,10 @@ seconds to the player, current room, shopping list, and strength deck.
 | Presentation and widget composition | `shopper.kv` | Kivy properties and `ids` |
 
 Small reusable code is grouped by domain instead of being collected in a
-generic utility module. Pure card rules live in `cardLogic.py`, temporary
-player-effect state in `playerEffects.py`, room-file parsing in
-`roomLayout.py`, and the Kivy translation bridge in `localization.py`.
-Single-owner helpers stay private to their owning module.
+generic utility module. Pure card rules live in `cardLogic.py`, item placement
+rules in `itemLogic.py`, temporary player-effect state in `playerEffects.py`,
+room-file parsing in `roomLayout.py`, and the Kivy translation bridge in
+`localization.py`. Single-owner helpers stay private to their owning module.
 
 ## Startup and screen lifecycle
 
@@ -105,11 +105,13 @@ codes to runtime `Tile` frames and records room-local collections such as walls,
 shelves, items, crates, water, NPCs, carts, and adverts.
 
 Tiles own optional item and crate widgets. A shelf may create an `Item` during
-construction. Gratitude-card navigation stones are direct room children so they
-remain attached when an existing room is revisited. `Room` mirrors these child
-objects in lists used by update, collision, and interaction code. Whenever a
-child is added or removed, both the widget tree and the corresponding room
-collection must remain synchronized.
+construction. Appreciation asks the current `Room` to choose an empty shelf;
+the room applies the capped rarity-distance bonus and mirrors the new tile item
+in its item collection. Gratitude-card navigation stones are direct room
+children so they remain attached when an existing room is revisited. `Room`
+mirrors these child objects in lists used by update, collision, and interaction
+code. Whenever a child is added or removed, both the widget tree and the
+corresponding room collection must remain synchronized.
 
 See `CONTENT_FORMATS.md` for the raw-code contract and currently dormant marker
 types.

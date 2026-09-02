@@ -151,6 +151,32 @@ timer represents a repeatedly refreshed secondary effect, as Gratitude does.
 
 See `PORTING_STATUS.md` for the per-card inventory.
 
+### Appreciation card (ID 21)
+
+**Current and intended:** Activating Appreciation in an active floor room adds
+one normal collectible item to a randomly selected empty shelf in that room.
+The item is not guaranteed to be on the shopping list. It uses the normal item
+rarity distribution at the room's Manhattan distance plus the card's whole
+level, capped at the best existing distribution.
+
+If every shelf is occupied, or the room contains no shelves, activation fails
+without consuming cooldown, experience, or the card selection. A successful
+activation grants normal card experience and is instantaneous; it has no
+temporary effect to expire or reset. The new item persists when its room is
+revisited during the same floor and is discarded with the floor like the
+room's initially generated items.
+
+| Card level | Item rarity-distance bonus | Cooldown |
+| ---: | ---: | ---: |
+| 1 | +1 | 30 seconds |
+| 2 | +2 | 27 seconds |
+| 3 | +3 | 24 seconds |
+
+The successful use that reaches level 2 or 3 immediately receives the
+three-second cooldown reduction. Its item was generated at the level the card
+had when that activation began; the stronger rarity bonus applies from the next
+successful activation.
+
 ### Gratitude card (ID 22)
 
 **Current and intended:** Activating Gratitude in an active floor room drops one
@@ -229,4 +255,3 @@ placeholder.
 **Intended:** Player-visible strings come from flat dot-separated translation
 keys. Card and item IDs remain language-independent; localized display names
 must not become persistence identifiers.
-

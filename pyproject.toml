@@ -23,6 +23,7 @@ py-modules = [
     "game",
     "interactionRange",
     "item",
+    "itemLogic",
     "localization",
     "main",
     "navigationStone",

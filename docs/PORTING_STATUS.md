@@ -1,6 +1,6 @@
 # Kivy porting status
 
-Last reviewed: 2026-08-18
+Last reviewed: 2026-09-02
 
 The current repository is a Kivy rewrite of
 <https://github.com/Llaugo/VahvuusVaris>. The legacy project is a behavioral
@@ -74,7 +74,7 @@ their required API in the live Kivy `ShopperGame`, `Player`, and `Room` classes.
 | 18 | `HumilityCard` | Temperance | Playable | Verify hitbox/visual reset at every transition |
 | 19 | `PrudenceCard` | Temperance | Not ported | pause domains, `stopTime`, float-safe expiry |
 | 20 | `RegulationCard` | Temperance | Not ported | advert pushing/block state and expiry |
-| 21 | `AppreciationCard` | Spirituality | Not ported | room-level item creation and full-shelf failure |
+| 21 | `AppreciationCard` | Spirituality | Playable | Verify full-shelf failure, room persistence, and level tuning |
 | 22 | `GratitudeCard` | Spirituality | Playable | Verify room persistence, level tuning, and Zest overlap |
 | 23 | `HopeCard` | Spirituality | Not ported | directional darkness beam and reset |
 | 24 | `HumorCard` | Spirituality | Not ported | water collision and `Player.swim` |

@@ -568,18 +568,17 @@ class RegulationCard(StrengthCard):
 class AppreciationCard(StrengthCard):
     def __init__(self):
         super().__init__(21)
-        self.timerMax = 1
+        self.timerMax = 0
 
     # Adds an item to room if not on cooldown
     def tryActivate(self, game):
-        if super().tryActivate(game):
-            if not game.addItem(math.floor(self.level)):
-                self.reset(game)
-            else:
-                if self.levelup():
-                    self.upgradeCard(0,-3*60)
-                return True
-        return False
+        if self.cooldown or self.timer > 0:
+            return False
+        if not game.addItem(math.floor(self.level)):
+            return False
+        if self.levelup():
+            self.upgradeCard(0, -3)
+        return super().tryActivate(game)
 
 # Gratitude card can drop stones on the ground to keep track of steps and gives a speed boost when walking over the stones
 class GratitudeCard(StrengthCard):

@@ -125,6 +125,11 @@ class ShopperGame(Widget):
                 self.currentRoom.removeItem(item)
                 break
 
+    def addItem(self, rarityBonus):
+        if not self.gameActive or self.currentRoom is None:
+            return False
+        return self.currentRoom.addItem(rarityBonus) is not None
+
     def addStone(self):
         if not self.gameActive or self.currentRoom is None:
             return False

@@ -18,6 +18,7 @@ The suite checks:
 - card IDs, classes, categories, and card images stay aligned;
 - active card overlays loop at a duration-independent rate;
 - card-level thresholds remain float-safe;
+- Appreciation shelf selection and rarity bonuses remain valid and capped;
 - source-keyed timed speed effects compose, refresh, and expire;
 - referenced static assets exist with exact case;
 - sprite sheets retain their frame geometry;
@@ -66,15 +67,19 @@ items, cards, or floor transitions.
 10. Curiosity removes a reachable crate and handles no-target activation.
 11. Zest increases speed and returns it to normal after expiry/reset.
 12. Humility changes both visible size and hitbox, then restores both.
-13. Gratitude drops one visible stone with matching visual/trigger bounds,
+13. Appreciation adds exactly one collectible item to an empty shelf, uses the
+    expected rarity bonus at levels 1-3, reduces cooldown from 30 to 27 to 24
+    seconds, preserves the item when revisiting the room, and rejects a full
+    room without consuming selection, experience, or cooldown.
+14. Gratitude drops one visible stone with matching visual/trigger bounds,
     rejects an overlapping duplicate without a cooldown, preserves stones when
     revisiting a room, applies the expected boost without overriding Zest, and
     never replaces its cooldown overlay with the active animation.
-14. Standing on the lift shows the lift button; floor transition does not leave
+15. Standing on the lift shows the lift button; floor transition does not leave
     a selected, active, or cooldown overlay in an invalid state.
-15. Resize the window to 1000 x 500 and at least one non-2:1 shape. The world,
+16. Resize the window to 1000 x 500 and at least one non-2:1 shape. The world,
     buttons, cards, and text remain reachable.
-16. Leave and re-enter the game screen once. Input is not duplicated and only
+17. Leave and re-enter the game screen once. Input is not duplicated and only
     one update loop is active.
 
 Current known incomplete flows—Continue, settings, information, timeout,
