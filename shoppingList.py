@@ -6,7 +6,7 @@ from kivy.clock import Clock
 
 
 import const
-import utils
+import localization
 from spriteSheet import SpriteSheet
 from random import randint
 
@@ -90,9 +90,9 @@ class ShoppingList(Widget):
                 break
         if received: # Refresh if item added
             self.refreshContents()
-            self.ids.itemText.text = utils.tr("game.found_item") + "\n[b]" + itemName + "[/b]\n" + utils.tr("game.correct_item_text")
+            self.ids.itemText.text = localization.tr("game.found_item") + "\n[b]" + itemName + "[/b]\n" + localization.tr("game.correct_item_text")
         else:
-            self.ids.itemText.text = utils.tr("game.found_item") + "\n[b]" + itemName + "[/b]\n" + utils.tr("game.incorrect_item_text")
+            self.ids.itemText.text = localization.tr("game.found_item") + "\n[b]" + itemName + "[/b]\n" + localization.tr("game.incorrect_item_text")
         self.showImgTimer = 5
         return received
     

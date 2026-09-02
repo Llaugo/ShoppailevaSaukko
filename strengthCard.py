@@ -6,8 +6,7 @@ from kivy.properties import NumericProperty, ObjectProperty, BooleanProperty
 import const
 from spriteSheet import SpriteSheet
 import playerClass
-from cardAnimation import advanceActiveOverlay
-from cardProgression import advanceCardLevel
+from cardLogic import advanceActiveOverlay, advanceCardLevel
 import math
 
 # Class for strength cards. There is a parent class and 26 child classes, one each strength.

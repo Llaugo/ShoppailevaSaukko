@@ -5,9 +5,9 @@ items, and sprite sheets. Update it with any format change.
 
 ## Room CSV files
 
-`utils.readLayout` reads CSV rows as integers. One file may contain multiple
-layouts. A separator is a CSV row for which every cell is empty or whitespace;
-comma-only rows therefore count as separators.
+`roomLayout.readLayouts` reads CSV rows as integers. One file may contain
+multiple layouts. A separator is a CSV row for which every cell is empty or
+whitespace; comma-only rows therefore count as separators.
 
 | File | Layout size | Purpose |
 | --- | ---: | --- |
@@ -141,4 +141,3 @@ change.
 
 Individual card PNGs and button state PNGs are used directly by KV. Preserve
 their filenames unless every reference and automated check is updated.
-

@@ -1,4 +1,5 @@
-import utils
+import localization
+import roomLayout
 
 # Initial world resolution
 worldWidth = 4000
@@ -59,11 +60,11 @@ roomDistMax = len(itemRarity)-1
 # All the items that can appear in the shopping list and in the shop
 # The first list has the most common items and the last list has the least common items
 def shop():
-    return [[utils.tr("item.item1"), utils.tr("item.item2"),  utils.tr("item.item3"),  utils.tr("item.item4"),  utils.tr("item.item5")],
-            [utils.tr("item.item6"), utils.tr("item.item7"),  utils.tr("item.item8"),  utils.tr("item.item9"),  utils.tr("item.item10")],
-            [utils.tr("item.item11"),utils.tr("item.item12"), utils.tr("item.item13"), utils.tr("item.item14"), utils.tr("item.item15")],
-            [utils.tr("item.item16"),utils.tr("item.item17"), utils.tr("item.item18"), utils.tr("item.item19"), utils.tr("item.item20")],
-            [utils.tr("item.item21"),utils.tr("item.item22"), utils.tr("item.item23"), utils.tr("item.item24"), utils.tr("item.item25")],]
+    return [[localization.tr("item.item1"), localization.tr("item.item2"),  localization.tr("item.item3"),  localization.tr("item.item4"),  localization.tr("item.item5")],
+            [localization.tr("item.item6"), localization.tr("item.item7"),  localization.tr("item.item8"),  localization.tr("item.item9"),  localization.tr("item.item10")],
+            [localization.tr("item.item11"),localization.tr("item.item12"), localization.tr("item.item13"), localization.tr("item.item14"), localization.tr("item.item15")],
+            [localization.tr("item.item16"),localization.tr("item.item17"), localization.tr("item.item18"), localization.tr("item.item19"), localization.tr("item.item20")],
+            [localization.tr("item.item21"),localization.tr("item.item22"), localization.tr("item.item23"), localization.tr("item.item24"), localization.tr("item.item25")],]
 
 '''
 The rooms are created randomly from a list of predetermined layouts. 
@@ -78,10 +79,10 @@ One layout is a square of numbers, each number representing a type of tile.
 7 = Water
 8 = Advert screen
 '''
-lobbyLayout  = utils.readLayout("rooms/lift.csv")
-startLayouts = utils.readLayout("rooms/startRooms.csv")
-roomLayouts  = utils.readLayout("rooms/roomLayouts.csv")
-testRoom     = utils.readLayout("rooms/testRoom.csv")
+lobbyLayout  = roomLayout.readLayouts("rooms/lift.csv")
+startLayouts = roomLayout.readLayouts("rooms/startRooms.csv")
+roomLayouts  = roomLayout.readLayouts("rooms/roomLayouts.csv")
+testRoom     = roomLayout.readLayouts("rooms/testRoom.csv")
 
 '''
 All the words and sentences used in the game in different languages.
@@ -229,4 +230,3 @@ phrase = [
      ""],
 ["HISSEN",
      ""]]
-

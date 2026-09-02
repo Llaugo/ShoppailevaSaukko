@@ -192,7 +192,9 @@ class LocalizationContracts(unittest.TestCase):
         finnish = json.loads((I18N / "fi.json").read_text(encoding="utf-8"))
         self.assertIsInstance(finnish, dict)
 
-        key_pattern = re.compile(r'(?:app|utils|self)\.tr\(\s*f?["\']([^"\']+)["\']')
+        key_pattern = re.compile(
+            r'(?:app|localization|self)\.tr\(\s*f?["\']([^"\']+)["\']'
+        )
         required: set[str] = set()
         for path in [*ROOT.glob("*.py"), ROOT / "shopper.kv"]:
             for key in key_pattern.findall(path.read_text(encoding="utf-8")):

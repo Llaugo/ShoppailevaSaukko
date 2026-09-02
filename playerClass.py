@@ -3,9 +3,22 @@ from kivy.properties import ObjectProperty, NumericProperty
 from spriteSheet import SpriteSheet
 import math
 import const
-import utils
 import room
-from speedEffects import TimedSpeedEffects
+from playerEffects import TimedSpeedEffects
+
+
+def _intersectRects(a, b):
+    """Return two widgets' positive-area intersection, or None."""
+
+    x1 = max(a.x, b.x)
+    y1 = max(a.y, b.y)
+    x2 = min(a.right, b.right)
+    y2 = min(a.top, b.top)
+    width = x2 - x1
+    height = y2 - y1
+    if width > 0 and height > 0:
+        return x1, y1, width, height
+    return None
 
 class Player(Widget):
     texture = ObjectProperty(None)  # holds a Texture
@@ -67,7 +80,7 @@ class Player(Widget):
         collided = False
         for solid in solids:                                # Check all the solid objects in the room
             if self.collide_widget(solid): # Check collision
-                overlap = utils.intersect_rects(self, solid)             # Compute overlap rectangle
+                overlap = _intersectRects(self, solid)             # Compute overlap rectangle
                 if overlap: 
                     # Push the player out of the solid object towards the closest way out
                     if preferDir == "x" or (overlap[2] < overlap[3] and preferDir != "y"): # Choose the smaller overlap dimension if there is no preferation

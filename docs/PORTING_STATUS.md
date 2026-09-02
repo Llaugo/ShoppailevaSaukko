@@ -23,7 +23,7 @@ may still exist but calls an API that does not exist in the live Kivy objects.
 | Strength selection | Playable | `strengthMenu.py` | Needs localization completion and manual aspect-ratio checks |
 | Gameplay rendering/scaling | Playable | `game.py`, `shopper.kv` | Duplicate key binding; mobile movement absent |
 | Floor matrix and lazy rooms | Playable | `game.py` | Starts from `testRoom`, not a production start layout |
-| Room CSV decoding | Playable | `utils.py`, `room.py` | Decoder docs in `const.py` are stale for encoded markers |
+| Room CSV decoding | Playable | `roomLayout.py`, `room.py` | Decoder docs in `const.py` are stale for encoded markers |
 | Player movement/collision | Playable | live top section of `playerClass.py` | No water, NPC, cart, flight, strength, or push state |
 | Items and rarity | Playable | `item.py`, `const.py` | Randomness is not injectable for deterministic tests |
 | Shopping list | Playable | `shoppingList.py` | Completion is not connected to victory |
@@ -104,4 +104,3 @@ class, with seconds-based timing and Kivy collision primitives.
 
 Several card classes are similarly close copies of their legacy versions. Their
 presence does not imply playability; use the tables above.
-

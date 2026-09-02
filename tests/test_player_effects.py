@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from speedEffects import TimedSpeedEffects
+from playerEffects import TimedSpeedEffects
 
 
 class TimedSpeedEffectsTests(unittest.TestCase):

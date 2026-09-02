@@ -35,18 +35,24 @@ seconds to the player, current room, shopping list, and strength deck.
 
 | Area | Owner | Collaborators |
 | --- | --- | --- |
-| App and current locale | `main.ShopperApp` | `utils.tr`, KV labels |
+| App and current locale | `main.ShopperApp` | `localization.tr`, KV labels |
 | Screen lifecycle | `main.GameScreen` and `ScreenManager` | `shopper.kv` |
 | Run and floor state | `game.ShopperGame` | room, player, list, deck |
-| Player input/effects/collision | `playerClass.Player` | `ShopperGame.pressed`, `Room` |
+| Player input/effects/collision | `playerClass.Player` | `playerEffects.TimedSpeedEffects`, `ShopperGame.pressed`, `Room` |
 | Room decoding and local collections | `room.Room` | `Tile`, `Item`, `Crate`, `NavigationStone` |
 | Tile rendering and item spawning | `tile.Tile` | `SpriteSheet`, `Item` |
 | Shopping goal and feedback | `shoppingList.ShoppingList` | `const.shop`, translations |
 | Card selection before a run | `strengthMenu.StrengthMenu` | card images, translations |
 | Card selection during a run | `strengthDeck.StrengthDeck` | six card instances, player range |
-| Individual card behavior | subclasses in `strengthCard.py` | game/player/room APIs |
-| Tuning and content indexes | `const.py` | `utils.readLayout` |
+| Individual card behavior | subclasses in `strengthCard.py` | `cardLogic`, game/player/room APIs |
+| Tuning and content indexes | `const.py` | `roomLayout.readLayouts` |
 | Presentation and widget composition | `shopper.kv` | Kivy properties and `ids` |
+
+Small reusable code is grouped by domain instead of being collected in a
+generic utility module. Pure card rules live in `cardLogic.py`, temporary
+player-effect state in `playerEffects.py`, room-file parsing in
+`roomLayout.py`, and the Kivy translation bridge in `localization.py`.
+Single-owner helpers stay private to their owning module.
 
 ## Startup and screen lifecycle
 
@@ -93,10 +99,10 @@ being extended.
 
 ## Room and content construction
 
-`utils.readLayout` returns a list of integer matrices. A row whose cells are all
-empty ends the current matrix. `Room.setRoom` translates raw content codes to
-runtime `Tile` frames and records room-local collections such as walls, shelves,
-items, crates, water, NPCs, carts, and adverts.
+`roomLayout.readLayouts` returns a list of integer matrices. A row whose cells
+are all empty ends the current matrix. `Room.setRoom` translates raw content
+codes to runtime `Tile` frames and records room-local collections such as walls,
+shelves, items, crates, water, NPCs, carts, and adverts.
 
 Tiles own optional item and crate widgets. A shelf may create an `Item` during
 construction. Gratitude-card navigation stones are direct room children so they
@@ -164,10 +170,10 @@ for internal collections and state that does not need binding.
 ## Localization flow
 
 `ShopperApp.setLanguage` reads `i18n/<language>.json` into a flat dictionary.
-`app.tr`, `StrengthMenu.tr`, and `utils.tr` return the key itself when a value is
-missing. Finnish is the source locale. English uses an older, incompatible key
-set and Swedish is an empty placeholder; neither is currently selectable as a
-complete experience.
+`app.tr`, `StrengthMenu.tr`, and `localization.tr` return the key itself when a
+value is missing. Finnish is the source locale. English uses an older,
+incompatible key set and Swedish is an empty placeholder; neither is currently
+selectable as a complete experience.
 
 ## Architectural risks to address before expansion
 
@@ -180,4 +186,3 @@ complete experience.
 - Production start layouts are bypassed by a test layout.
 - The UI contains destinations that do not have a working screen or flow.
 - Game-over and completed-list state are not connected to screen transitions.
-

@@ -119,14 +119,16 @@ The application currently starts in Finnish. Change `lang = "fi"` in
 
 | Path | Purpose |
 | --- | --- |
-| `main.py` | Application entry point, screen management, and localization |
+| `main.py` | Application entry point, screen management, and locale loading |
+| `localization.py` | Shared bridge to the running app's translations |
 | `shopper.kv` | Kivy interface definitions and screen layouts |
 | `game.py` | Main game loop, floor generation, room travel, and interactions |
-| `playerClass.py`, `speedEffects.py` | Player movement, collision, and temporary effects |
+| `playerClass.py`, `playerEffects.py` | Player movement, collision, and temporary effects |
 | `room.py`, `tile.py`, `navigationStone.py` | Room construction and room-local objects |
+| `roomLayout.py` | Room CSV loading and layout separation |
 | `shoppingList.py`, `item.py` | Shopping-list progress, item rarity, and item animation |
 | `strengthMenu.py` | Pre-game strength-card selection |
-| `strengthDeck.py`, `strengthCard.py`, `cardAnimation.py`, `cardProgression.py` | Card behavior, animation, and progression |
+| `strengthDeck.py`, `strengthCard.py`, `cardLogic.py` | Card behavior and shared card rules |
 | `const.py` | Gameplay tuning values, item pools, and loaded room layouts |
 | `rooms/` | CSV room-layout data |
 | `i18n/` | JSON translation files |
