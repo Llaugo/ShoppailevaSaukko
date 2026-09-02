@@ -16,6 +16,7 @@ The suite checks:
 - Finnish contains every statically referenced and card-generated key;
 - non-empty locale files are valid JSON objects;
 - card IDs, classes, categories, and card images stay aligned;
+- active card overlays loop at a duration-independent rate;
 - card-level thresholds remain float-safe;
 - source-keyed timed speed effects compose, refresh, and expire;
 - referenced static assets exist with exact case;
@@ -67,7 +68,8 @@ items, cards, or floor transitions.
 12. Humility changes both visible size and hitbox, then restores both.
 13. Gratitude drops one visible stone with matching visual/trigger bounds,
     rejects an overlapping duplicate without a cooldown, preserves stones when
-    revisiting a room, and applies the expected boost without overriding Zest.
+    revisiting a room, applies the expected boost without overriding Zest, and
+    never replaces its cooldown overlay with the active animation.
 14. Standing on the lift shows the lift button; floor transition does not leave
     a selected, active, or cooldown overlay in an invalid state.
 15. Resize the window to 1000 x 500 and at least one non-2:1 shape. The world,

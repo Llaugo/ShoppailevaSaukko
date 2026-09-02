@@ -17,6 +17,7 @@ dependencies = [
 
 [tool.setuptools]
 py-modules = [
+    "cardAnimation",
     "cardProgression",
     "const",
     "door",

@@ -266,6 +266,24 @@ class CardAndItemContracts(unittest.TestCase):
                 self.assertEqual(png_dimensions(image), (250, 350))
                 self.assertIn(f"strengths.card{card_id}_info", finnish)
 
+    def test_gratitude_card_never_uses_the_active_overlay(self) -> None:
+        tree = ast.parse((ROOT / "strengthCard.py").read_text(encoding="utf-8"))
+        gratitude = next(
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "GratitudeCard"
+        )
+        setting = next(
+            node
+            for node in gratitude.body
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Name) and target.id == "showActiveOverlay"
+                for target in node.targets
+            )
+        )
+        self.assertIs(ast.literal_eval(setting.value), False)
+
     def test_item_rarity_is_cumulative_and_covers_floor_distance(self) -> None:
         tree = ast.parse((ROOT / "const.py").read_text(encoding="utf-8"))
         distributions = literal_assignment(tree, "itemRarity")

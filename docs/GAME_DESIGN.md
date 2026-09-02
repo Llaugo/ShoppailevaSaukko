@@ -144,6 +144,11 @@ Every card implementation must specify:
 - reset behavior at room, floor, and screen boundaries;
 - interaction with other simultaneous effects.
 
+Active card overlays use frames 5-8 at eight frames per second, looping twice
+per second regardless of effect duration. Cooldown frames 9-24 remain tied to
+cooldown progress. Cards may explicitly opt out of the active loop when their
+timer represents a repeatedly refreshed secondary effect, as Gratitude does.
+
 See `PORTING_STATUS.md` for the per-card inventory.
 
 ### Gratitude card (ID 22)
@@ -163,6 +168,10 @@ speed boost. The boost and placement cooldown count down independently, and an
 existing boost may finish across a normal room transition. Floor, deck, and
 screen resets clear the boost. Simultaneous speed boosts do not multiply; the
 strongest active boost determines player speed.
+
+The stone-triggered boost never displays the card's active overlay animation.
+If placement is still cooling down, its cooldown overlay remains visible while
+the boost is active; otherwise the card uses its normal or selected overlay.
 
 | Card level | Stone boost | Placement cooldown |
 | ---: | ---: | ---: |

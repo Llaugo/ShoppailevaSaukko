@@ -126,7 +126,7 @@ The application currently starts in Finnish. Change `lang = "fi"` in
 | `room.py`, `tile.py`, `navigationStone.py` | Room construction and room-local objects |
 | `shoppingList.py`, `item.py` | Shopping-list progress, item rarity, and item animation |
 | `strengthMenu.py` | Pre-game strength-card selection |
-| `strengthDeck.py`, `strengthCard.py`, `cardProgression.py` | Card behavior and progression |
+| `strengthDeck.py`, `strengthCard.py`, `cardAnimation.py`, `cardProgression.py` | Card behavior, animation, and progression |
 | `const.py` | Gameplay tuning values, item pools, and loaded room layouts |
 | `rooms/` | CSV room-layout data |
 | `i18n/` | JSON translation files |

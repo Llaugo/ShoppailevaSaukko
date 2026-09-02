@@ -6,6 +6,7 @@ from kivy.properties import NumericProperty, ObjectProperty, BooleanProperty
 import const
 from spriteSheet import SpriteSheet
 import playerClass
+from cardAnimation import advanceActiveOverlay
 from cardProgression import advanceCardLevel
 import math
 
@@ -13,6 +14,7 @@ import math
 # Each card gives the player some ability or boost, which has a timer during which the strength is active.
 # After the ability ends, there is a cooldown for using the ability.
 class StrengthCard(Widget):
+    showActiveOverlay = True
     imageNum = NumericProperty(0)
     ready = BooleanProperty(False) # Is the card selected/pressed
     timer = NumericProperty(0)
@@ -29,6 +31,7 @@ class StrengthCard(Widget):
         self.timerMax = 8       # timer duration in seconds
         self.cooldownMax = 30   # cooldown duration in seconds
         self.level = 1          # Level of the card
+        self.activeOverlayPhase = 0
         self.shinePhase = 0
         self.overlaySheet = SpriteSheet("images/card_overlay.png", (250, 350))
         self.setOverlay(0)
@@ -41,21 +44,27 @@ class StrengthCard(Widget):
     #def clearOverlay(self):
     #    self.overlayTexture = None
 
-    def updateOverlay(self):
+    def updateOverlay(self, dt=0):
         frame = 0
-        if self.timer > 0:
+        if self.showActiveOverlay and self.timer > 0:
             # Active/running animation: frames 5–8
-            progress = (self.timerMax - self.timer)/self.timerMax
-            frame = math.floor(progress*64 % 4) + 5
+            self.activeOverlayPhase, frame = advanceActiveOverlay(
+                self.activeOverlayPhase,
+                dt,
+            )
         elif self.cooldown > 0:
+            self.activeOverlayPhase = 0
             # Cooldown animation: frames 9–24
             progress = (self.cooldownMax - self.cooldown)/self.cooldownMax
             frame = math.floor(progress*16) + 9
             frame = min(frame, 24)
         elif self.ready:
+            self.activeOverlayPhase = 0
             self.shinePhase += 1
             # Selected/glowing animation: frames 1–4
             frame = math.floor(self.shinePhase/15) % 4 + 1
+        else:
+            self.activeOverlayPhase = 0
         self.setOverlay(frame)
 
 
@@ -65,6 +74,7 @@ class StrengthCard(Widget):
         if not self.cooldown:
             self.timer = self.timerMax
             self.cooldown = self.cooldownMax
+            self.activeOverlayPhase = 0
             self.unpress()
             return True
         return False
@@ -76,7 +86,7 @@ class StrengthCard(Widget):
 
     # Do card action if card is active
     def update(self, dt, game):
-        self.updateOverlay()
+        self.updateOverlay(dt)
         self.updateTimers(dt)
 
     # update the timers of the card
@@ -102,6 +112,7 @@ class StrengthCard(Widget):
     def reset(self, game):
         self.timer = 0
         self.cooldown = 0
+        self.activeOverlayPhase = 0
         self.setOverlay(0)
         self.unpress()
 
@@ -573,6 +584,8 @@ class AppreciationCard(StrengthCard):
 
 # Gratitude card can drop stones on the ground to keep track of steps and gives a speed boost when walking over the stones
 class GratitudeCard(StrengthCard):
+    showActiveOverlay = False
+
     def __init__(self):
         super().__init__(22)
         self.timerMax = 1 # This card's timer means how long the speed boost lasts
@@ -600,7 +613,7 @@ class GratitudeCard(StrengthCard):
                 self.timerMax,
                 source="gratitude",
             )
-        self.updateOverlay()
+        self.updateOverlay(dt)
     
     # Reset player speed to normal
     def reset(self, game):
