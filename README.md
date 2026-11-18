@@ -1,6 +1,6 @@
 # Shoppaileva Saukko
 
-![Shoppaileva Saukko main menu](images/menu_screen.png)
+![Shoppaileva Saukko main menu](images/Vahvuusvalikko.png)
 
 **Shoppaileva Saukko** (In english: *Shopper Otter*) is a tile-based shopping
 adventure built with Python and [Kivy](https://kivy.org/). It is a Kivy rewrite
